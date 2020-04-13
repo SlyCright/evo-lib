@@ -1,9 +1,9 @@
 package org.evocraft.lib.model;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 import org.junit.jupiter.api.RepeatedTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SpecimenBuilderTest {
 
@@ -17,14 +17,14 @@ class SpecimenBuilderTest {
 
         int sum = result.i + result.j;
 
-        assertTrue(sum == 1 || sum == -1);
+        assertTrue(sum == 2 || sum == -2);
     }
 
     @RepeatedTest(10)
     void cellMapFilling() throws NoSuchFieldException, IllegalAccessException {
         SpecimenBuilder specimenBuilder = new SpecimenBuilder();
 
-        Map<GridPlace, Cell> gridPlaceCellMap = specimenBuilder.cellMapFilling();
+        Map<GridPlace, Cell> gridPlaceCellMap = specimenBuilder.cellsMapFilling();
 
         assertTrue(gridPlaceCellMap.size() > 1);
     }

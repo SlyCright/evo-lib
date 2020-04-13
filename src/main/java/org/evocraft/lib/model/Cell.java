@@ -6,7 +6,7 @@ import lombok.Data;
 import processing.core.PVector;
 
 @Data
-public class Cell {
+public class Cell implements SpecimenComponent{
 
     private Node upLeftNode = null;
     private Node rightUpNode = null;
@@ -15,5 +15,10 @@ public class Cell {
 
     private List<Node> nodes = new ArrayList<>(4);
     private PVector position = new PVector(0, 0);
+
+    @Override
+    public void act() {
+
+    }
 
 }
