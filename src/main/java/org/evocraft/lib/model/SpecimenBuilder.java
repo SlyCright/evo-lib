@@ -29,7 +29,6 @@ public class SpecimenBuilder {
 
                         cell.setUpLeftNode(upLeftNode);
                         upLeftNode.setDownRightCell(cell);
-todo a lot of things
                         break;
                 }
             }
