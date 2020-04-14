@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class Specimen {
 
-    private List<SpecimenComponent> specimenComponents = new ArrayList<>();
+    private ArrayList<SpecimenComponent> specimenComponents = new ArrayList<>();
 
 }

@@ -3,13 +3,16 @@ package org.evocraft.lib.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import lombok.Data;
 import processing.core.PVector;
 
+@Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 12;
-    final private float GRID_MASH_SIZE = 75f;
-    final private float WINDOW_WIDTH = 999, WINDOW_HEIGHT = 666;
+    final private int CELLS_TOTAL = 120;
+    final private float GRID_MASH_SIZE = 25f;
+    final private float WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
     public Specimen buildSpecimen() {
 
