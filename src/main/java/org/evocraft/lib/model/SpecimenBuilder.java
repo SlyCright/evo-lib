@@ -3,15 +3,14 @@ package org.evocraft.lib.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
 import lombok.Data;
 import processing.core.PVector;
 
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 120;
-    final private float GRID_MASH_SIZE = 25f;
+    final private int CELLS_TOTAL = 40;
+    final private float GRID_MASH_SIZE = 150f;
     final private float WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
     public Specimen buildSpecimen() {
@@ -20,6 +19,7 @@ public class SpecimenBuilder {
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
         setEuclidPositionsToNodes(nodesMapping);
+        setEuclidPositionsToCells(cellsMapping);
         Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping);
         return specimen;
     }
@@ -173,6 +173,16 @@ public class SpecimenBuilder {
             posY = WINDOW_HEIGHT / 2f + (((float) gridPlace.j + 1f) / 2f - 1f) * GRID_MASH_SIZE;
 
             node.setPosition(new PVector(posX, posY));
+        }
+    }
+
+    protected void setEuclidPositionsToCells(Map<GridPlace, Cell> cellsMapping) {
+
+        Cell cell;
+        for (GridPlace gridPlace : cellsMapping.keySet()) {
+            cell = cellsMapping.get(gridPlace);
+
+            cell.calculatePosition();
         }
     }
 
