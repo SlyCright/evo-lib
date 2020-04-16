@@ -9,17 +9,18 @@ import processing.core.PVector;
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 40;
-    final private float GRID_MASH_SIZE = 150f;
-    final private float WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
+    final private int CELLS_TOTAL = 50;
+    final private float GRID_MASH_SIZE = 40f;
+    final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
+    final private boolean IF_ARRANGE_NODES_NEEDED = true;
 
     public Specimen buildSpecimen() {
 
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling();
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
+        linkNodesBetweenNodes(nodesMapping);
         setEuclidPositionsToNodes(nodesMapping);
-        setEuclidPositionsToCells(cellsMapping);
         Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping);
         return specimen;
     }
@@ -76,7 +77,7 @@ public class SpecimenBuilder {
         return new GridPlace(i, j);
     }
 
-    private Map<GridPlace, Node> nodesMapFilling(Map<GridPlace, Cell> cellsMapping) {
+    protected Map<GridPlace, Node> nodesMapFilling(Map<GridPlace, Cell> cellsMapping) {
         Map<GridPlace, Node> nodesMap = new HashMap<>();
         int i, j;
         float posX, posY;
@@ -116,47 +117,91 @@ public class SpecimenBuilder {
         return nodesMap;
     }
 
-    private void linkCellsBetweenNodes(Map<GridPlace, Cell> cellsMapping, Map<GridPlace, Node> nodesMapping) {
-        int i, j;
+    //todo refactor: better use "bind" instead of "link"
+    protected void linkCellsBetweenNodes(Map<GridPlace, Cell> cellsMapping, Map<GridPlace, Node> nodesMapping) {
+        int adjacentNodeI = 0, adjacentNodeJ = 0;
+        int adjacentCellI = 0, adjacentCellJ = 0;
         Cell cell;
-        GridPlace nodeGradePlace;
-        Node node;
+        GridPlace adjacentNodeGridPlace;
+        GridPlace adjacentCellGridPlace;
+        Node adjacentNode;
+        Cell adjacentCell;
         for (GridPlace cellGridPlace : cellsMapping.keySet()) {
             cell = cellsMapping.get(cellGridPlace);
             for (Direction direction : Direction.values()) {
+
                 switch (direction) {
                     case UP:
-                        i = cellGridPlace.i - 1;
-                        j = cellGridPlace.j - 1;
-                        nodeGradePlace = new GridPlace(i, j);
-                        node = nodesMapping.get(nodeGradePlace);
-                        cell.getNodes().add(node);
-                        node.getCells().add(cell);
+                        adjacentNodeI = cellGridPlace.i - 1;
+                        adjacentNodeJ = cellGridPlace.j - 1;
+                        adjacentCellI = cellGridPlace.i;
+                        adjacentCellJ = cellGridPlace.j - 2;
                         break;
                     case RIGHT:
-                        i = cellGridPlace.i + 1;
-                        j = cellGridPlace.j - 1;
-                        nodeGradePlace = new GridPlace(i, j);
-                        node = nodesMapping.get(nodeGradePlace);
-                        cell.getNodes().add(node);
-                        node.getCells().add(cell);
+                        adjacentNodeI = cellGridPlace.i + 1;
+                        adjacentNodeJ = cellGridPlace.j - 1;
+                        adjacentCellI = cellGridPlace.i + 2;
+                        adjacentCellJ = cellGridPlace.j;
                         break;
                     case DOWN:
-                        i = cellGridPlace.i + 1;
-                        j = cellGridPlace.j + 1;
-                        nodeGradePlace = new GridPlace(i, j);
-                        node = nodesMapping.get(nodeGradePlace);
-                        cell.getNodes().add(node);
-                        node.getCells().add(cell);
+                        adjacentNodeI = cellGridPlace.i + 1;
+                        adjacentNodeJ = cellGridPlace.j + 1;
+                        adjacentCellI = cellGridPlace.i;
+                        adjacentCellJ = cellGridPlace.j + 2;
                         break;
                     case LEFT:
-                        i = cellGridPlace.i - 1;
-                        j = cellGridPlace.j + 1;
-                        nodeGradePlace = new GridPlace(i, j);
-                        node = nodesMapping.get(nodeGradePlace);
-                        cell.getNodes().add(node);
-                        node.getCells().add(cell);
+                        adjacentNodeI = cellGridPlace.i - 1;
+                        adjacentNodeJ = cellGridPlace.j + 1;
+                        adjacentCellI = cellGridPlace.i - 2;
+                        adjacentCellJ = cellGridPlace.j;
                         break;
+                }
+
+                adjacentNodeGridPlace = new GridPlace(adjacentNodeI, adjacentNodeJ);
+                adjacentNode = nodesMapping.get(adjacentNodeGridPlace);
+                cell.getAdjacentNodes().add(adjacentNode);
+                adjacentNode.getAdjacentCells().add(cell);
+//todo refactor: here is method linkCellsBetweenCells
+                adjacentCellGridPlace = new GridPlace(adjacentCellI, adjacentCellJ);
+                adjacentCell = cellsMapping.get(adjacentCellGridPlace);
+                if (adjacentCell != null) {
+                    cell.getAdjacentCells().add(adjacentCell);
+                }
+            }
+        }
+    }
+
+    private void linkNodesBetweenNodes(Map<GridPlace, Node> nodesMapping) {
+        int adjacentNodeI = 0, adjacentNodeJ = 0;
+        GridPlace adjacentNodeGridPlace;
+        Node adjacentNode;
+        Node node;
+        for (GridPlace cellGridPlace : nodesMapping.keySet()) {
+            node = nodesMapping.get(cellGridPlace);
+            for (Direction direction : Direction.values()) {
+                switch (direction) {
+                    case UP:
+                        adjacentNodeI = cellGridPlace.i;
+                        adjacentNodeJ = cellGridPlace.j - 2;
+                        break;
+                    case RIGHT:
+                        adjacentNodeI = cellGridPlace.i + 2;
+                        adjacentNodeJ = cellGridPlace.j;
+                        break;
+                    case DOWN:
+                        adjacentNodeI = cellGridPlace.i;
+                        adjacentNodeJ = cellGridPlace.j + 2;
+                        break;
+                    case LEFT:
+                        adjacentNodeI = cellGridPlace.i - 2;
+                        adjacentNodeJ = cellGridPlace.j;
+                        break;
+                }
+
+                adjacentNodeGridPlace = new GridPlace(adjacentNodeI, adjacentNodeJ);
+                adjacentNode = nodesMapping.get(adjacentNodeGridPlace);
+                if (adjacentNode != null) {
+                    node.getAdjacentNodes().add(adjacentNode);
                 }
             }
         }
@@ -169,20 +214,15 @@ public class SpecimenBuilder {
         for (GridPlace gridPlace : nodesMapping.keySet()) {
             node = nodesMapping.get(gridPlace);
 
-            posX = WINDOW_WIDTH / 2f + (((float) gridPlace.i + 1f) / 2f - 1f) * GRID_MASH_SIZE;
-            posY = WINDOW_HEIGHT / 2f + (((float) gridPlace.j + 1f) / 2f - 1f) * GRID_MASH_SIZE;
+            posX = INITIAL_X_OF_SPECIMEN + new Random().nextFloat();
+            posY = INITIAL_Y_OF_SPECIMEN + new Random().nextFloat();
+
+            if (IF_ARRANGE_NODES_NEEDED) {
+                posX += (((float) gridPlace.i + 1f) / 2f - 1f) * GRID_MASH_SIZE;
+                posY += (((float) gridPlace.j + 1f) / 2f - 1f) * GRID_MASH_SIZE;
+            }
 
             node.setPosition(new PVector(posX, posY));
-        }
-    }
-
-    protected void setEuclidPositionsToCells(Map<GridPlace, Cell> cellsMapping) {
-
-        Cell cell;
-        for (GridPlace gridPlace : cellsMapping.keySet()) {
-            cell = cellsMapping.get(gridPlace);
-
-            cell.calculatePosition();
         }
     }
 

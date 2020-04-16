@@ -1,13 +1,13 @@
-import org.evocraft.lib.model.*;
+import org.evocraft.lib.model.*; //<>//
 
 SpecimenBuilder specimenBuilder=new SpecimenBuilder();
 Specimen specimen=specimenBuilder.buildSpecimen();
 ArrayList<SpecimenComponent> components=specimen.getSpecimenComponents();
 
-int wdth=(int)specimenBuilder.getWINDOW_WIDTH();
-int hght=(int)specimenBuilder.getWINDOW_HEIGHT();
+int wdth=999;
+int hght=666;
 
-int TICK_MAX=600;
+int TICK_MAX=300;
 int tick=TICK_MAX;
 
 void settings() {
@@ -15,10 +15,10 @@ void settings() {
 }
 
 void setup() {
-  //frameRate(5);
+  //frameRate();
 }
 
-void draw() {
+void draw() {    
   background(75);
 
   for (SpecimenComponent component : components) {
@@ -34,6 +34,11 @@ void draw() {
     if (component instanceof Node) {
       component.act();
       Node node=(Node)component;
+
+      for (Node nearbyNode : node.getAdjacentNodes()) {
+      line(node.getPosition().x, node.getPosition().y, nearbyNode.getPosition().x, nearbyNode.getPosition().y);
+      } 
+
       PVector position=node.getPosition();
       ellipse(position.x, position.y, 5f, 5f);
     }
@@ -41,7 +46,7 @@ void draw() {
 
   tick--;
   if (tick<0) {
-    tick=TICK_MAX;
+    tick=TICK_MAX; 
     specimen=specimenBuilder.buildSpecimen();
     components=specimen.getSpecimenComponents();
   }

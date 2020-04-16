@@ -1,9 +1,12 @@
 package org.evocraft.lib.model;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 class SpecimenBuilderTest {
 
@@ -27,6 +30,24 @@ class SpecimenBuilderTest {
         Map<GridPlace, Cell> gridPlaceCellMap = specimenBuilder.cellsMapFilling();
 
         assertTrue(gridPlaceCellMap.size() > 1);
+    }
+
+    @Test()
+    void linkCellsBetweenNodes() {
+        SpecimenBuilder specimenBuilder = new SpecimenBuilder();
+        Specimen specimen = specimenBuilder.buildSpecimen();
+        List<SpecimenComponent> specimenComponents = specimen.getSpecimenComponents();
+        for (SpecimenComponent component : specimenComponents) {
+            if (component instanceof Cell) {
+                List<Cell> cells = ((Cell) component).getAdjacentCells();
+                for (Cell cell : cells) {
+                    List<Cell> adjacentCells = cell.getAdjacentCells();
+                    for(Cell adjacentCell:adjacentCells){
+                        assertNotNull(adjacentCell);
+                    }
+                }
+            }
+        }
     }
 
 }

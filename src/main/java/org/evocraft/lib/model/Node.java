@@ -8,17 +8,32 @@ import processing.core.PVector;
 @Data
 public class Node implements SpecimenComponent {
 
-    final private float FRICTION_FACTOR=0.1f;
+    final private float FRICTION_FACTOR = 0.05f;
+    final private float MEMBRANE_STIFFNESS = 0.025f;
 
     protected PVector position = new PVector(0.0f, 0.0f);
     protected PVector velocity = new PVector(0.0f, 0.0f);
     protected PVector acceleration = new PVector(0.0f, 0.0f);
 
-    private List<Cell> cells = new ArrayList<>();
-
+    private List<Cell> adjacentCells = new ArrayList<>();
+    private List<Node> adjacentNodes = new ArrayList<>(4);
 
     @Override
     public void act() {
+//todo refactor: make separated method
+        for (Node adjacentNode : this.adjacentNodes) {
+            PVector adjacentNodePosition = adjacentNode.getPosition().copy();
+            PVector nodePosition = this.getPosition().copy();
+            PVector forceDirection = PVector.sub(adjacentNodePosition, nodePosition);
+            forceDirection.normalize();
+            float distanceToAdjacentNode = this.position.dist(adjacentNodePosition);
+            float forceValue = MEMBRANE_STIFFNESS * (distanceToAdjacentNode - Cell.CELL_SIZE );
+            PVector force = forceDirection.copy();
+            force.mult(forceValue);
+            this.applyForce(force);
+        }
+
+//todo refactor: make separated method
         PVector dragForce = calculateDragForce();
         applyForce(dragForce);
         velocity.add(acceleration);
@@ -36,7 +51,7 @@ public class Node implements SpecimenComponent {
         float velocitySqValue = currentVelocity.magSq();
         PVector velocityDirection = currentVelocity.copy();
         velocityDirection.normalize();
-        return velocityDirection.mult(-1*FRICTION_FACTOR*velocitySqValue);
+        return velocityDirection.mult(-1 * FRICTION_FACTOR * velocitySqValue);
     }
 
 }
