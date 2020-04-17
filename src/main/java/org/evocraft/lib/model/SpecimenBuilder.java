@@ -1,6 +1,8 @@
 package org.evocraft.lib.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import lombok.Data;
@@ -9,8 +11,9 @@ import processing.core.PVector;
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 50;
-    final private float GRID_MASH_SIZE = 40f;
+    final private int CELLS_TOTAL = 75;
+    final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
+    final private float GRID_MASH_SIZE = 75f;
     final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
     final private boolean IF_ARRANGE_NODES_NEEDED = true;
 
@@ -18,13 +21,41 @@ public class SpecimenBuilder {
 
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling();
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
+        List<Connection> connections = generateConnections(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
         linkNodesBetweenNodes(nodesMapping);
         setEuclidPositionsToNodes(nodesMapping);
-        Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping);
+        Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
         return specimen;
     }
 
+    private List<Connection> generateConnections(Map<GridPlace, Cell> cellsMapping) {
+        List<Connection> connections = new ArrayList<>();
+        Cell inputCell, outPutCell;
+        Connection connection;
+        for (int i = 0; i < CONNECTIONS_TOTAL; i++) {
+            inputCell = getRandomCellOf(cellsMapping); //todo backlog: DNA here
+            outPutCell = getRandomCellOf(cellsMapping); //todo backlog: DNA here
+            connection = new Connection(new Random().nextFloat()); //todo backlog: DNA here
+            connection.setInput(inputCell);
+            connection.setOutput(outPutCell);
+            inputCell.getOutput().add(connection);
+            outPutCell.getInput().add(connection);
+            connections.add(connection);
+        }
+        return connections;
+    }
+
+    private Cell getRandomCellOf(Map<GridPlace, Cell> cellsMapping) {
+        int size = cellsMapping.size();
+        int randomCellIndex;
+        randomCellIndex = new Random().nextInt(size);
+        GridPlace randomPlace = cellsMapping.keySet().stream()
+            .skip(randomCellIndex)
+            .findFirst()
+            .get();
+        return cellsMapping.get(randomPlace);
+    }
 
     protected Map<GridPlace, Cell> cellsMapFilling() {
         Map<GridPlace, Cell> cellsMapping = new HashMap<>();
@@ -226,14 +257,21 @@ public class SpecimenBuilder {
         }
     }
 
-    private Specimen placeComponentsInSpecimen(Map<GridPlace, Cell> cellsMapping, Map<GridPlace, Node> nodesMapping) {
+    private Specimen placeComponentsInSpecimen(Map<GridPlace, Cell> cellsMapping, Map<GridPlace, Node> nodesMapping, List<Connection> connections) {
         Specimen specimen = new Specimen();
+
         for (Cell cell : cellsMapping.values()) {
             specimen.getSpecimenComponents().add(cell);
         }
+
         for (Node node : nodesMapping.values()) {
             specimen.getSpecimenComponents().add(node);
         }
+
+        for (Connection connection : connections) {
+            specimen.getSpecimenComponents().add(connection);
+        }
+
         return specimen;
     }
 

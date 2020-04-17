@@ -17,6 +17,10 @@ public class Cell implements SpecimenComponent {
 
     private List<Node> adjacentNodes = new ArrayList<>(4);
     private List<Cell> adjacentCells = new ArrayList<>(4);
+
+    private List<Connection> input = new ArrayList<>();
+    private List<Connection> output = new ArrayList<>();
+
     private PVector position = new PVector(0, 0);
 
     @Override
