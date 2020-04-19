@@ -2,6 +2,7 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Data;
 import processing.core.PVector;
 
@@ -27,7 +28,18 @@ public class Node implements SpecimenComponent {
             PVector forceDirection = PVector.sub(adjacentNodePosition, nodePosition);
             forceDirection.normalize();
             float distanceToAdjacentNode = this.position.dist(adjacentNodePosition);
-            float forceValue = MEMBRANE_STIFFNESS * (distanceToAdjacentNode - Cell.CELL_SIZE );
+
+            float membraneSize = 0f;
+            for (Cell cell : adjacentCells) {
+                membraneSize += cell.getSize();
+            }
+            for (Cell cell : adjacentNode.getAdjacentCells()) {
+                membraneSize += cell.getSize();
+            }
+
+            membraneSize /= (adjacentCells.size() + adjacentNode.getAdjacentCells().size());
+
+            float forceValue = MEMBRANE_STIFFNESS * (distanceToAdjacentNode - membraneSize);
             PVector force = forceDirection.copy();
             force.mult(forceValue);
             this.applyForce(force);

@@ -2,6 +2,7 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Data;
 import processing.core.PVector;
 
@@ -13,7 +14,7 @@ public class Cell implements SpecimenComponent {
 
     private float cellsInteractionStiffness = 0.25f * STIFFNESS;
 
-    private float diagonalCellSize = (float) Math.sqrt(2.0) * CELL_SIZE;
+    protected final float DIAGONAL_CELL_SIZE = (float) Math.sqrt(2.0) * CELL_SIZE;
 
     private List<Node> adjacentNodes = new ArrayList<>(4);
     private List<Cell> adjacentCells = new ArrayList<>(4);
@@ -50,13 +51,15 @@ public class Cell implements SpecimenComponent {
             PVector forceDirection = PVector.sub(nodePosition, cellPosition);
             forceDirection.normalize();
             float distanceToNode = position.dist(nodePosition);
-            float forceValue = -1 * STIFFNESS * (distanceToNode - diagonalCellSize / 2f);
+            float thisCellDiagonalSize = this.getDiagonalSize();
+            float forceValue = -1 * STIFFNESS * (distanceToNode - thisCellDiagonalSize / 2f);
             PVector force = forceDirection.copy();
             force.mult(forceValue);
             node.applyForce(force);
         }
+
   /*
-//todo refactor: separate method
+//todo refactor: separate method. This way to calculate itercellar forces. If use should be designed by DNA
         for (Cell adjacentCell : adjacentCells) {
             PVector adjacentCellPosition = adjacentCell.getPosition().copy();
             PVector cellPosition = this.getPosition().copy();
@@ -71,6 +74,14 @@ public class Cell implements SpecimenComponent {
             }
         }
 */
+    }
+
+    public float getSize() {
+        return CELL_SIZE;
+    }
+
+    public float getDiagonalSize() {
+        return DIAGONAL_CELL_SIZE;
     }
 
 }

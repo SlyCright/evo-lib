@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import lombok.Data;
 import processing.core.PVector;
 
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 75;
+    final private int CELLS_TOTAL = 50;
+    final private float MUSCLES_PORTION = 1f / 3f;
     final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
     final private float GRID_MASH_SIZE = 75f;
     final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
@@ -51,9 +53,9 @@ public class SpecimenBuilder {
         int randomCellIndex;
         randomCellIndex = new Random().nextInt(size);
         GridPlace randomPlace = cellsMapping.keySet().stream()
-            .skip(randomCellIndex)
-            .findFirst()
-            .get();
+                .skip(randomCellIndex)
+                .findFirst()
+                .get();
         return cellsMapping.get(randomPlace);
     }
 
@@ -69,12 +71,19 @@ public class SpecimenBuilder {
             int randomCellIndex = new Random().nextInt(size);
 
             gridPlace = cellsMapping.keySet().stream()
-                .skip(randomCellIndex)
-                .findFirst()
-                .get();
+                    .skip(randomCellIndex)
+                    .findFirst()
+                    .get();
 
             GridPlace randomPlace = getRandomPlaceNextTo(gridPlace);
-            cellsMapping.put(randomPlace, new Cell());
+
+            if (new Random().nextFloat() < MUSCLES_PORTION) {
+                cell = new Muscle();
+            } else {
+                cell = new Cell();
+            }
+
+            cellsMapping.put(randomPlace, cell);
         }
         return cellsMapping;
     }
