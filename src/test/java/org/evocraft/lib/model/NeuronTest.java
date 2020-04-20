@@ -23,7 +23,7 @@ class NeuronTest {
         }
 
         for (Connection connection : connections) {
-            Cell cell = new Cell();
+            Cell cell = new Muscle();
             cell.setActive(true);
             connection.setInput(cell);
         }

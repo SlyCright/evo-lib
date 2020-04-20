@@ -6,7 +6,7 @@ import lombok.Data;
 import processing.core.PVector;
 
 @Data
-public class Cell extends Activateable {
+public abstract class Cell extends Activateable {
 
     final static public float CELL_SIZE = 50f;
     final private float STIFFNESS = 0.01f;

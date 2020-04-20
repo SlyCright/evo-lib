@@ -11,7 +11,7 @@ import processing.core.PVector;
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 25;
+    final private int CELLS_TOTAL = 75;
     final private float MUSCLES_PORTION = 1f / 3f;
     final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
     final private float GRID_MASH_SIZE = 75f;
@@ -60,7 +60,7 @@ public class SpecimenBuilder {
 
     protected Map<GridPlace, Cell> cellsMapFilling() {
         Map<GridPlace, Cell> cellsMapping = new HashMap<>();
-        Cell cell = new Cell();
+        Cell cell = new Neuron(0f); //todo backlog: DNA here
         GridPlace gridPlace = new GridPlace(0, 0);
         cellsMapping.put(gridPlace, cell);
 
@@ -79,7 +79,7 @@ public class SpecimenBuilder {
             if (new Random().nextFloat() < MUSCLES_PORTION) {
                 cell = new Muscle();
             } else {
-                cell = new Cell();
+                cell = new Neuron(0f);
             }
 
             cellsMapping.put(randomPlace, cell);
