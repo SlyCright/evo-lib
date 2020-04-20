@@ -7,7 +7,4 @@ public abstract class Activateable implements SpecimenComponent{
 
     protected boolean isActive = false;
 
-    @Override
-   abstract public void act() ;
-
 }
