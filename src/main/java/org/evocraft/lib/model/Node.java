@@ -2,14 +2,13 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Data;
 import processing.core.PVector;
 
 @Data
 public class Node implements SpecimenComponent {
 
-    final private float FRICTION_FACTOR = 0.05f;
+    final private float DRAG_FRICTION_FACTOR = 0.05f;
     final private float MEMBRANE_STIFFNESS = 0.025f;
 
     protected PVector position = new PVector(0.0f, 0.0f);
@@ -63,7 +62,7 @@ public class Node implements SpecimenComponent {
         float velocitySqValue = currentVelocity.magSq();
         PVector velocityDirection = currentVelocity.copy();
         velocityDirection.normalize();
-        return velocityDirection.mult(-1 * FRICTION_FACTOR * velocitySqValue);
+        return velocityDirection.mult(-1 * DRAG_FRICTION_FACTOR * velocitySqValue);
     }
 
 }

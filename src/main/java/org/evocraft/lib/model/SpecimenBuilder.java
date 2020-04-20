@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import lombok.Data;
 import processing.core.PVector;
 
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 50;
+    final private int CELLS_TOTAL = 25;
     final private float MUSCLES_PORTION = 1f / 3f;
     final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
     final private float GRID_MASH_SIZE = 75f;
@@ -41,8 +40,8 @@ public class SpecimenBuilder {
             connection = new Connection(new Random().nextFloat()); //todo backlog: DNA here
             connection.setInput(inputCell);
             connection.setOutput(outPutCell);
-            inputCell.getOutput().add(connection);
-            outPutCell.getInput().add(connection);
+            inputCell.getOutputConnections().add(connection);
+            outPutCell.getInputConnections().add(connection);
             connections.add(connection);
         }
         return connections;
@@ -211,7 +210,7 @@ public class SpecimenBuilder {
         }
     }
 
-    private void linkNodesBetweenNodes(Map<GridPlace, Node> nodesMapping) {
+    private void linkNodesBetweenNodes(Map<GridPlace, Node> nodesMapping) { //todo bugfix: redundant links appears
         int adjacentNodeI = 0, adjacentNodeJ = 0;
         GridPlace adjacentNodeGridPlace;
         Node adjacentNode;

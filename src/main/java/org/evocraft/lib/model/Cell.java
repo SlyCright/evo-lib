@@ -2,15 +2,15 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Data;
 import processing.core.PVector;
 
 @Data
-public class Cell implements SpecimenComponent {
+public class Cell extends Activateable {
 
     final static public float CELL_SIZE = 50f;
     final private float STIFFNESS = 0.01f;
+
 
     private float cellsInteractionStiffness = 0.25f * STIFFNESS;
 
@@ -19,10 +19,10 @@ public class Cell implements SpecimenComponent {
     private List<Node> adjacentNodes = new ArrayList<>(4);
     private List<Cell> adjacentCells = new ArrayList<>(4);
 
-    private List<Connection> input = new ArrayList<>();
-    private List<Connection> output = new ArrayList<>();
-
     private PVector position = new PVector(0, 0);
+
+    protected List<Connection> inputConnections = new ArrayList<>();
+    protected List<Connection> outputConnections = new ArrayList<>();
 
     @Override
     public void act() {

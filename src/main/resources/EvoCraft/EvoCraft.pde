@@ -7,7 +7,7 @@ ArrayList<SpecimenComponent> components=specimen.getSpecimenComponents();
 int wdth=999;
 int hght=666;
 
-int TICK_MAX=1600;
+int TICK_MAX=600;
 int tick=TICK_MAX;
 
 void settings() {
@@ -39,7 +39,7 @@ void draw() {
         } else {
           stroke(125, 0, 0);
         }
-        strokeWeight(3f); //muscle.getSize()
+        strokeWeight(muscle.getSize()); //muscle.getSize()
       } else {
         stroke(0);
       }
@@ -71,9 +71,14 @@ void draw() {
       Connection connection=(Connection)component;
       PVector initialPosition=connection.getInitialPosition().copy();
       PVector terminalPosition=connection.getTerminalPosition().copy();
-      float weight=connection.getWeight();
+      float weight=connection.getWEIGHT();
 
-      stroke(180, 180, 180, 35);
+      if (connection.isActive()) {
+        stroke(180, 180, 180);
+      } else {
+        stroke(180, 180, 180, 35);
+      }
+
       strokeWeight(5f*weight);
       line(initialPosition.x, initialPosition.y, terminalPosition.x, terminalPosition.y);
     }
