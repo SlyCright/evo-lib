@@ -7,7 +7,7 @@ ArrayList<SpecimenComponent> components=specimen.getSpecimenComponents();
 int wdth=999;
 int hght=666;
 
-int TICK_MAX=1600;
+final int TICK_MAX=600;
 int tick=TICK_MAX;
 
 void settings() {
@@ -15,7 +15,7 @@ void settings() {
 }
 
 void setup() {
-  frameRate(15);
+  //frameRate(15);
 }
 
 void draw() {    
@@ -29,6 +29,17 @@ void draw() {
     if (component instanceof Cell) {
       Cell cell=(Cell)component;
       PVector position=cell.getPosition();
+
+      if (cell instanceof Oscillator) {
+        Oscillator oscillator=(Oscillator)cell;
+        boolean isActive=oscillator.isActive();
+        if (isActive) {
+          stroke(0, 255, 0);
+        } else {
+          stroke(0, 125, 0);
+        }
+        strokeWeight(10f); 
+      } 
 
       if (cell instanceof Neuron) {
         Neuron neuron=(Neuron)cell;
@@ -49,7 +60,7 @@ void draw() {
         } else {
           stroke(125, 0, 0);
         }
-        strokeWeight(3f); //muscle.getSize()
+        strokeWeight(muscle.getSize()); //muscle.getSize()
       } 
 
       ellipse(position.x, position.y, 2f, 2f);

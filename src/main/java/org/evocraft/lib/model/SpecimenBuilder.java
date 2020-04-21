@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import lombok.Data;
 import processing.core.PVector;
 
@@ -13,6 +14,8 @@ public class SpecimenBuilder {
 
     final private int CELLS_TOTAL = 75;
     final private float MUSCLES_PORTION = 1f / 3f;
+    final private float OSCILLATORS_PORTION = 1f / 3f;
+    final private float NEURON_PORTION = 1f / 3f;
     final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
     final private float GRID_MASH_SIZE = 75f;
     final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
@@ -76,9 +79,17 @@ public class SpecimenBuilder {
 
             GridPlace randomPlace = getRandomPlaceNextTo(gridPlace);
 
-            if (new Random().nextFloat() < MUSCLES_PORTION) {
+            float randomFloat = new Random().nextFloat();
+
+            if (0f < randomFloat && randomFloat < MUSCLES_PORTION) {
                 cell = new Muscle();
-            } else {
+            }
+
+            if (MUSCLES_PORTION < randomFloat && randomFloat < MUSCLES_PORTION + OSCILLATORS_PORTION) {
+                cell = new Oscillator(34 + new Random().nextInt(34));
+            }
+
+            if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomFloat && randomFloat < 1f) {
                 cell = new Neuron(0f);
             }
 

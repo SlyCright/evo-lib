@@ -6,9 +6,9 @@ import processing.core.PVector;
 @Data
 public class Connection extends Activateable {
 
-    Cell input, output;
-    PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
-    final float WEIGHT;
+    private Cell input, output;
+    private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
+    private final float WEIGHT;
 
     Connection(float WEIGHT) {
         this.WEIGHT = WEIGHT;

@@ -1,6 +1,8 @@
 package org.evocraft.lib.model;
 
+import java.util.List;
 import java.util.Random;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,19 +10,28 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Muscle extends Cell {
 
-    private final int TICKS_PER_CHANGE_ACTIVATION = 34 + new Random().nextInt(34); //todo refactor: shouldn't be here. This field for oscillator
-    private int currentTick = 0;
-
     private final float SIZE_WHEN_ACTIVATED = CELL_SIZE * (1.5f - new Random().nextFloat()); //todo backlog: DNA here
     private final float DIAGONAL_SIZE_WHEN_ACTIVATED = (float) Math.sqrt(2.0) * SIZE_WHEN_ACTIVATED;
 
+    //todo refactor: Muscle(float sizeWhenActivated);
+
     public void act() {
+        this.isActive = calculateIfActive(inputConnections);
         super.act();
-        currentTick++;
-        if (currentTick > TICKS_PER_CHANGE_ACTIVATION) {
-            isActive = !isActive;
-            currentTick = 0;
+    }
+
+    protected boolean calculateIfActive(List<Connection> inputConnections) {
+
+        boolean isActive = false;
+
+        for (Connection connection : inputConnections) {
+            if (connection.isActive()) {
+                isActive = true;
+                break;
+            }
         }
+
+        return isActive;
     }
 
     public float getSize() {
