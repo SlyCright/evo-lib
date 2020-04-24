@@ -12,7 +12,7 @@ import processing.core.PVector;
 @Data
 public class SpecimenBuilder {
 
-    final private int CELLS_TOTAL = 75;
+    final private int CELLS_TOTAL = 12;
     final private float MUSCLES_PORTION = 1f / 3f;
     final private float OSCILLATORS_PORTION = 1f / 3f;
     final private float NEURON_PORTION = 1f / 3f;

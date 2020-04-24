@@ -1,7 +1,8 @@
 import org.evocraft.lib.model.*; //<>//
 
-World world=new World();
-ArrayList<Specimen> species=world.getSpecies();
+SpecimenBuilder specimenBuilder=new SpecimenBuilder();
+Specimen specimen=specimenBuilder.buildSpecimen();
+ArrayList<SpecimenComponent> components=specimen.getSpecimenComponents();
 
 int wdth=999;
 int hght=666;
@@ -20,8 +21,6 @@ void setup() {
 void draw() {    
   background(75);
 
-  ArrayList<SpecimenComponent> components=specimen.getSpecimenComponents();
-
   for (SpecimenComponent component : components) {
     component.act();
   }
@@ -39,7 +38,7 @@ void draw() {
         } else {
           stroke(0, 125, 0);
         }
-        strokeWeight(10f);
+        strokeWeight(10f); 
       } 
 
       if (cell instanceof Neuron) {
@@ -50,7 +49,7 @@ void draw() {
         } else {
           stroke(125, 125, 0);
         }
-        strokeWeight(10f);
+        strokeWeight(10f); 
       } 
 
       if (cell instanceof Muscle) {
