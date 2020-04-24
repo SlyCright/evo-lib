@@ -2,16 +2,17 @@ package org.evocraft.lib.model;
 
 import java.util.List;
 import java.util.Random;
-
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = true)
 public class Muscle extends Cell {
 
-    private final float SIZE_WHEN_ACTIVATED = CELL_SIZE * (1.5f - new Random().nextFloat()); //todo backlog: DNA here
-    private final float DIAGONAL_SIZE_WHEN_ACTIVATED = (float) Math.sqrt(2.0) * SIZE_WHEN_ACTIVATED;
+    private float sizeWhenActivated = CELL_SIZE * (1.5f - new Random().nextFloat()); //todo backlog: DNA here
+    private float diagonalSizeWhenActivated = (float) Math.sqrt(2.0) * sizeWhenActivated;
 
     //todo refactor: Muscle(float sizeWhenActivated);
 
@@ -37,7 +38,7 @@ public class Muscle extends Cell {
     public float getSize() {
         float size;
         if (isActive) {
-            size = SIZE_WHEN_ACTIVATED;
+            size = sizeWhenActivated;
         } else {
             size = CELL_SIZE;
         }
@@ -47,11 +48,18 @@ public class Muscle extends Cell {
     public float getDiagonalSize() {
         float diagonalSize;
         if (isActive) {
-            diagonalSize = DIAGONAL_SIZE_WHEN_ACTIVATED;
+            diagonalSize = diagonalSizeWhenActivated;
         } else {
             diagonalSize = DIAGONAL_CELL_SIZE;
         }
         return diagonalSize;
+    }
+
+    @Override
+    public Cell copy() {
+        return Muscle.builder()
+            .
+            .build();
     }
 
 }

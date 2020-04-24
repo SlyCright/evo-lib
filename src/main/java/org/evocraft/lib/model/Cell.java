@@ -2,15 +2,18 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import processing.core.PVector;
 
 @Data
+@Builder
+@NoArgsConstructor
 public abstract class Cell extends Activateable {
 
     final static public float CELL_SIZE = 50f;
     final private float STIFFNESS = 0.01f;
-
 
     private float cellsInteractionStiffness = 0.25f * STIFFNESS;
 
@@ -23,6 +26,8 @@ public abstract class Cell extends Activateable {
 
     protected List<Connection> inputConnections = new ArrayList<>();
     protected List<Connection> outputConnections = new ArrayList<>();
+
+    private GridPlace gridPlace;
 
     @Override
     public void act() {
@@ -84,4 +89,5 @@ public abstract class Cell extends Activateable {
         return DIAGONAL_CELL_SIZE;
     }
 
+    public abstract Cell copy();
 }

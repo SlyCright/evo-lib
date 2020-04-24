@@ -1,6 +1,6 @@
 package org.evocraft.lib.model;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,7 +13,7 @@ class NeuronTest {
         Float threshold = new Random().nextFloat();
         Neuron neuron = new Neuron(threshold);
         ArrayList<Connection> connections = new ArrayList<>();
-        int connectionsTotal = new Random().nextInt(108);
+        int connectionsTotal = new Random().nextInt(100);
         float sumWeight = 0f;
 
         for (int i = 0; i < connectionsTotal; i++) {
@@ -33,7 +33,7 @@ class NeuronTest {
 
         boolean isActive = neuron.calculateIfActive(connections);
 
-        assertTrue(shouldBeIsActive == isActive);
+        assertEquals(shouldBeIsActive, isActive);
     }
 
 }

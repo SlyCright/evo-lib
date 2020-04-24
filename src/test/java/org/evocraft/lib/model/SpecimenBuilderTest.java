@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import processing.core.PVector;
 
 class SpecimenBuilderTest {
 
@@ -35,14 +36,14 @@ class SpecimenBuilderTest {
     @Test()
     void linkCellsBetweenNodes() {
         SpecimenBuilder specimenBuilder = new SpecimenBuilder();
-        Specimen specimen = specimenBuilder.buildSpecimen();
-        List<SpecimenComponent> specimenComponents = specimen.getSpecimenComponents();
+        Specimen specimen = specimenBuilder.buildSpecimenAt(new PVector(0f, 0f));
+        List<SpecimenComponent> specimenComponents = specimen.getComponents();
         for (SpecimenComponent component : specimenComponents) {
             if (component instanceof Cell) {
                 List<Cell> cells = ((Cell) component).getAdjacentCells();
                 for (Cell cell : cells) {
                     List<Cell> adjacentCells = cell.getAdjacentCells();
-                    for(Cell adjacentCell:adjacentCells){
+                    for (Cell adjacentCell : adjacentCells) {
                         assertNotNull(adjacentCell);
                     }
                 }

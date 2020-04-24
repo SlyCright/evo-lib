@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import lombok.Data;
 import processing.core.PVector;
 
@@ -18,19 +17,120 @@ public class SpecimenBuilder {
     final private float NEURON_PORTION = 1f / 3f;
     final private int CONNECTIONS_TOTAL = CELLS_TOTAL / 2;
     final private float GRID_MASH_SIZE = 75f;
-    final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
     final private boolean IF_ARRANGE_NODES_NEEDED = true;
 
-    public Specimen buildSpecimen() {
+    public Specimen buildNewSpecimenAt(PVector initialPosition) {
 
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling();
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
         List<Connection> connections = generateConnections(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
         linkNodesBetweenNodes(nodesMapping);
-        setEuclidPositionsToNodes(nodesMapping);
+        setEuclidPositionsToNodes(nodesMapping, initialPosition);
         Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
         return specimen;
+    }
+
+    public Specimen buildOffspringSpecimenOf(Specimen specimenOne, Specimen specimenTwo, PVector initialPosition) {
+        Map<GridPlace, Cell> cellsMapping = cellsMapFilling(specimenOne, specimenTwo);
+        return null;
+    }
+
+    protected Map<GridPlace, Cell> cellsMapFilling(Specimen ancestorOne, Specimen ancestorTwo) {
+        Map<GridPlace, Cell> offspringCellsMap = new HashMap<>();
+        Map<GridPlace, PairOfAncestorsCells> pairOfAncestorsCellsMap = new HashMap<>();
+        Map<GridPlace, Cell> cellsMapOfAncestorOne = generateCellsMapOf(ancestorOne);
+        Map<GridPlace, Cell> cellsMapOfAncestorTwo = generateCellsMapOf(ancestorTwo);
+        Cell cellOne = null, cellTwo = null;
+
+        for (GridPlace gridPlaceOne : cellsMapOfAncestorOne.keySet()) {
+
+            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceOne.i, gridPlaceOne.j);
+            PairOfAncestorsCells pairOfAncestorsCells = new PairOfAncestorsCells();
+            pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
+
+            cellOne = cellsMapOfAncestorOne.get(gridPlaceOne);
+            pairOfAncestorsCells.setOne(cellOne);
+        }
+
+        for (GridPlace gridPlaceTwo : cellsMapOfAncestorTwo.keySet()) {
+
+            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceTwo.i, gridPlaceTwo.j);
+            PairOfAncestorsCells pairOfAncestorsCells = pairOfAncestorsCellsMap.get(gridPlaceOfPair);
+            if (pairOfAncestorsCells == null) {
+                pairOfAncestorsCells = new PairOfAncestorsCells();
+                pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
+            }
+
+            cellTwo = cellsMapOfAncestorOne.get(gridPlaceTwo);
+            pairOfAncestorsCells.setTwo(cellTwo);
+        }
+
+        for (GridPlace gridPlace : pairOfAncestorsCellsMap.keySet()) {
+            GridPlace gridPlaceOffspring = new GridPlace(gridPlace.i, gridPlace.j);
+            Cell offspringCell = null;
+
+            if (new Random().nextFloat() < 0.5f) {
+                offspringCell = pairOfAncestorsCellsMap.get(gridPlace).getOne().copy();
+            } else {
+                offspringCell = pairOfAncestorsCellsMap.get(gridPlace).getTwo().copy();
+            }
+
+            if (offspringCell != null) {
+                offspringCellsMap.put(gridPlaceOffspring, offspringCell);
+            }
+        }
+
+        return offspringCellsMap;
+    }
+
+    private Map<GridPlace, Cell> generateCellsMapOf(Specimen specimen) {
+        Map<GridPlace, Cell> cellsMap = new HashMap<>();
+        for (SpecimenComponent component : specimen.getComponents()) {
+            if (component instanceof Cell) {
+                Cell cell = (Cell) component;
+                cellsMap.put(cell.getGridPlace(), cell);
+            }
+        }
+        return cellsMap;
+    }
+
+
+    protected Map<GridPlace, Cell> cellsMapFilling() {
+        Map<GridPlace, Cell> cellsMapping = new HashMap<>();
+        Cell cell = new Neuron(0f); //todo backlog: DNA here
+        GridPlace gridPlace = new GridPlace(0, 0);
+        cellsMapping.put(gridPlace, cell);
+
+        for (int i = 0; i < CELLS_TOTAL - 1; i++) {
+
+            int size = cellsMapping.size();
+            int randomCellIndex = new Random().nextInt(size);
+
+            gridPlace = cellsMapping.keySet().stream()
+                .skip(randomCellIndex)
+                .findFirst()
+                .get();
+
+            GridPlace randomPlace = getRandomPlaceNextTo(gridPlace);
+
+            float randomFloat = new Random().nextFloat();
+
+            if (0f < randomFloat && randomFloat < MUSCLES_PORTION) {
+                cell = new Muscle();
+            }
+
+            if (MUSCLES_PORTION < randomFloat && randomFloat < MUSCLES_PORTION + OSCILLATORS_PORTION) {
+                cell = new Oscillator(34 + new Random().nextInt(34));
+            }
+
+            if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomFloat && randomFloat < 1f) {
+                cell = new Neuron(new Random().nextFloat());
+            }
+            cell.setGridPlace(randomPlace);
+            cellsMapping.put(randomPlace, cell);
+        }
+        return cellsMapping;
     }
 
     private List<Connection> generateConnections(Map<GridPlace, Cell> cellsMapping) {
@@ -55,47 +155,10 @@ public class SpecimenBuilder {
         int randomCellIndex;
         randomCellIndex = new Random().nextInt(size);
         GridPlace randomPlace = cellsMapping.keySet().stream()
-                .skip(randomCellIndex)
-                .findFirst()
-                .get();
+            .skip(randomCellIndex)
+            .findFirst()
+            .get();
         return cellsMapping.get(randomPlace);
-    }
-
-    protected Map<GridPlace, Cell> cellsMapFilling() {
-        Map<GridPlace, Cell> cellsMapping = new HashMap<>();
-        Cell cell = new Neuron(0f); //todo backlog: DNA here
-        GridPlace gridPlace = new GridPlace(0, 0);
-        cellsMapping.put(gridPlace, cell);
-
-        for (int i = 0; i < CELLS_TOTAL - 1; i++) {
-
-            int size = cellsMapping.size();
-            int randomCellIndex = new Random().nextInt(size);
-
-            gridPlace = cellsMapping.keySet().stream()
-                    .skip(randomCellIndex)
-                    .findFirst()
-                    .get();
-
-            GridPlace randomPlace = getRandomPlaceNextTo(gridPlace);
-
-            float randomFloat = new Random().nextFloat();
-
-            if (0f < randomFloat && randomFloat < MUSCLES_PORTION) {
-                cell = new Muscle();
-            }
-
-            if (MUSCLES_PORTION < randomFloat && randomFloat < MUSCLES_PORTION + OSCILLATORS_PORTION) {
-                cell = new Oscillator(34 + new Random().nextInt(34));
-            }
-
-            if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomFloat && randomFloat < 1f) {
-                cell = new Neuron(0f);
-            }
-
-            cellsMapping.put(randomPlace, cell);
-        }
-        return cellsMapping;
     }
 
     protected GridPlace getRandomPlaceNextTo(GridPlace gridPlace) {
@@ -257,15 +320,15 @@ public class SpecimenBuilder {
         }
     }
 
-    private void setEuclidPositionsToNodes(Map<GridPlace, Node> nodesMapping) {
+    private void setEuclidPositionsToNodes(Map<GridPlace, Node> nodesMapping, PVector initialPosition) {
         int i, j;
         float posX, posY;
         Node node;
         for (GridPlace gridPlace : nodesMapping.keySet()) {
             node = nodesMapping.get(gridPlace);
 
-            posX = INITIAL_X_OF_SPECIMEN + new Random().nextFloat();
-            posY = INITIAL_Y_OF_SPECIMEN + new Random().nextFloat();
+            posX = initialPosition.x + new Random().nextFloat();
+            posY = initialPosition.y + new Random().nextFloat();
 
             if (IF_ARRANGE_NODES_NEEDED) {
                 posX += (((float) gridPlace.i + 1f) / 2f - 1f) * GRID_MASH_SIZE;
@@ -280,15 +343,15 @@ public class SpecimenBuilder {
         Specimen specimen = new Specimen();
 
         for (Cell cell : cellsMapping.values()) {
-            specimen.getSpecimenComponents().add(cell);
+            specimen.getComponents().add(cell);
         }
 
         for (Node node : nodesMapping.values()) {
-            specimen.getSpecimenComponents().add(node);
+            specimen.getComponents().add(node);
         }
 
         for (Connection connection : connections) {
-            specimen.getSpecimenComponents().add(connection);
+            specimen.getComponents().add(connection);
         }
 
         return specimen;
