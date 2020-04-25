@@ -2,10 +2,12 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PVector;
 
-@Data
+@Getter
+@Setter
 public class Node implements SpecimenComponent {
 
     final private float DRAG_FRICTION_FACTOR = 0.05f;

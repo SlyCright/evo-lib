@@ -2,20 +2,19 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PVector;
 
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
+//@NoArgsConstructor
 public abstract class Cell extends Activateable {
 
-    final static public float CELL_SIZE = 50f;
-    final private float STIFFNESS = 0.01f;
+    final static public float CELL_SIZE = 50f; //todo backlog: should depend of DNA
+    final private float STIFFNESS = 0.01f; //todo backlog: should depend of DNA
 
-    private float cellsInteractionStiffness = 0.25f * STIFFNESS;
+    private float cellsInteractionStiffness = 0.25f * STIFFNESS; //todo refactor: delete if don't used
 
     protected final float DIAGONAL_CELL_SIZE = (float) Math.sqrt(2.0) * CELL_SIZE;
 

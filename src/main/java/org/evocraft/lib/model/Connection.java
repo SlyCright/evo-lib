@@ -1,9 +1,11 @@
 package org.evocraft.lib.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PVector;
 
-@Data
+@Getter
+@Setter
 public class Connection extends Activateable {
 
     private Cell input, output;

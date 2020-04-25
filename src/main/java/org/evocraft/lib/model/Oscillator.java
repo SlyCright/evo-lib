@@ -1,7 +1,10 @@
 package org.evocraft.lib.model;
 
-import java.util.Random;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Oscillator extends Cell { //todo backlog: add some more types of oscillator: with signal of low of sin, for example, or Aperiodic
 
     private final int ACTIVATION_PERIOD_TICKS;
@@ -21,4 +24,12 @@ public class Oscillator extends Cell { //todo backlog: add some more types of os
 
         super.act();
     }
+
+    @Override
+    public Oscillator copy() {
+        Oscillator oscillator = new Oscillator(this.ACTIVATION_PERIOD_TICKS);
+        oscillator.setGridPlace(this.getGridPlace());
+        return oscillator;
+    }
+
 }

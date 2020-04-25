@@ -1,10 +1,13 @@
 package org.evocraft.lib.model;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import processing.core.PVector;
@@ -36,7 +39,7 @@ class SpecimenBuilderTest {
     @Test()
     void linkCellsBetweenNodes() {
         SpecimenBuilder specimenBuilder = new SpecimenBuilder();
-        Specimen specimen = specimenBuilder.buildSpecimenAt(new PVector(0f, 0f));
+        Specimen specimen = specimenBuilder.buildZeroGenerationSpecimenAt(new PVector(0f, 0f));
         List<SpecimenComponent> specimenComponents = specimen.getComponents();
         for (SpecimenComponent component : specimenComponents) {
             if (component instanceof Cell) {
@@ -49,6 +52,22 @@ class SpecimenBuilderTest {
                 }
             }
         }
+    }
+
+    @RepeatedTest(10)
+    void buildZeroGenerationSpecimenAt() {
+        SpecimenBuilder specimenBuilder = new SpecimenBuilder();
+
+        Specimen specimen=specimenBuilder.buildZeroGenerationSpecimenAt(new PVector(0f,0f));
+
+        Optional<GridPlace> nullGridPlace = specimen.getComponents().stream()
+            .filter(c -> c instanceof Cell)
+            .map(c -> (Cell) c)
+            .map(Cell::getGridPlace)
+            .filter(Objects::isNull)
+            .findFirst();
+
+        assertFalse(nullGridPlace.isPresent());
     }
 
 }

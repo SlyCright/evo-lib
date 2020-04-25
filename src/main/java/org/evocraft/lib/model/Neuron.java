@@ -1,17 +1,18 @@
 package org.evocraft.lib.model;
 
 import java.util.List;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+//@EqualsAndHashCode(callSuper = true)
 public class Neuron extends Cell {
 
-    private final float THRESHOLD;
+    private final float threshold;
 
     public Neuron(float threshold) {
-        this.THRESHOLD = threshold;
+        this.threshold = threshold;
     }
 
     @Override
@@ -20,6 +21,7 @@ public class Neuron extends Cell {
         super.act();
     }
 
+
     protected boolean calculateIfActive(List<Connection> inputConnections) { //todo backlog: depends of DNA here should be other types pf signal calculations. Like sigmoid function or something
         float signal = 0f;
         for (Connection connection : inputConnections) {
@@ -27,9 +29,16 @@ public class Neuron extends Cell {
         }
         signal /= inputConnections.size();
 
-        boolean isActive = signal > THRESHOLD;
+        boolean isActive = signal > threshold;
 
         return isActive;
+    }
+
+    @Override
+    public Neuron copy() {
+        Neuron neuron = new Neuron(this.threshold);
+        neuron.setGridPlace(this.getGridPlace());
+        return neuron;
     }
 
 }

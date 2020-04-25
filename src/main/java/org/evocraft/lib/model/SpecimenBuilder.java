@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PVector;
 
-@Data
-public class SpecimenBuilder {
+@Getter
+@Setter
+public class SpecimenBuilder { //todo refactor: the class is too large make several classes
 
     final private int CELLS_TOTAL = 12;
     final private float MUSCLES_PORTION = 1f / 3f;
@@ -19,21 +21,23 @@ public class SpecimenBuilder {
     final private float GRID_MASH_SIZE = 75f;
     final private boolean IF_ARRANGE_NODES_NEEDED = true;
 
-    public Specimen buildNewSpecimenAt(PVector initialPosition) {
-
+    public Specimen buildZeroGenerationSpecimenAt(PVector initialPosition) {
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling();
+        return makeSpecimenOfCellsAndConnections(cellsMapping, null, initialPosition);
+    }
+
+    public Specimen buildOffspringSpecimenOf(Specimen specimenOne, Specimen specimenTwo, PVector initialPosition) { //todo refactor: instead of position argument make separated method moveSpecimenToPosition(Specimen, Position)
+        Map<GridPlace, Cell> cellsMapping = cellsMapFilling(specimenOne, specimenTwo);
+        return makeSpecimenOfCellsAndConnections(cellsMapping, null, initialPosition);
+    }
+
+    private Specimen makeSpecimenOfCellsAndConnections(Map<GridPlace, Cell> cellsMapping, List<Connection> connectionsList, PVector initialPosition) {
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
         List<Connection> connections = generateConnections(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
         linkNodesBetweenNodes(nodesMapping);
         setEuclidPositionsToNodes(nodesMapping, initialPosition);
-        Specimen specimen = placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
-        return specimen;
-    }
-
-    public Specimen buildOffspringSpecimenOf(Specimen specimenOne, Specimen specimenTwo, PVector initialPosition) {
-        Map<GridPlace, Cell> cellsMapping = cellsMapFilling(specimenOne, specimenTwo);
-        return null;
+        return placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
     }
 
     protected Map<GridPlace, Cell> cellsMapFilling(Specimen ancestorOne, Specimen ancestorTwo) {
@@ -41,7 +45,7 @@ public class SpecimenBuilder {
         Map<GridPlace, PairOfAncestorsCells> pairOfAncestorsCellsMap = new HashMap<>();
         Map<GridPlace, Cell> cellsMapOfAncestorOne = generateCellsMapOf(ancestorOne);
         Map<GridPlace, Cell> cellsMapOfAncestorTwo = generateCellsMapOf(ancestorTwo);
-        Cell cellOne = null, cellTwo = null;
+        Cell cellOne, cellTwo;
 
         for (GridPlace gridPlaceOne : cellsMapOfAncestorOne.keySet()) {
 
@@ -71,9 +75,15 @@ public class SpecimenBuilder {
             Cell offspringCell = null;
 
             if (new Random().nextFloat() < 0.5f) {
-                offspringCell = pairOfAncestorsCellsMap.get(gridPlace).getOne().copy();
+                Cell one = pairOfAncestorsCellsMap.get(gridPlace).getOne();
+                if (one != null) {
+                    offspringCell = one.copy();
+                }
             } else {
-                offspringCell = pairOfAncestorsCellsMap.get(gridPlace).getTwo().copy();
+                Cell two = pairOfAncestorsCellsMap.get(gridPlace).getTwo();
+                if (two != null) {
+                    offspringCell = two.copy();
+                }
             }
 
             if (offspringCell != null) {
@@ -114,17 +124,17 @@ public class SpecimenBuilder {
 
             GridPlace randomPlace = getRandomPlaceNextTo(gridPlace);
 
-            float randomFloat = new Random().nextFloat();
+            float randomCellType = new Random().nextFloat();
 
-            if (0f < randomFloat && randomFloat < MUSCLES_PORTION) {
-                cell = new Muscle();
+            if (0f < randomCellType && randomCellType < MUSCLES_PORTION) {
+                cell = new Muscle(Cell.CELL_SIZE * (1.5f - new Random().nextFloat())); //todo refactor: make hardcoded value as constant
             }
 
-            if (MUSCLES_PORTION < randomFloat && randomFloat < MUSCLES_PORTION + OSCILLATORS_PORTION) {
-                cell = new Oscillator(34 + new Random().nextInt(34));
+            if (MUSCLES_PORTION < randomCellType && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION) {
+                cell = new Oscillator(new Random().nextInt(150)); //todo refactor: make hardcoded value as constant
             }
 
-            if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomFloat && randomFloat < 1f) {
+            if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomCellType && randomCellType < 1f) {
                 cell = new Neuron(new Random().nextFloat());
             }
             cell.setGridPlace(randomPlace);

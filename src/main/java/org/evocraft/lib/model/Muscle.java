@@ -1,20 +1,20 @@
 package org.evocraft.lib.model;
 
 import java.util.List;
-import java.util.Random;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@Builder
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class Muscle extends Cell {
 
-    private float sizeWhenActivated = CELL_SIZE * (1.5f - new Random().nextFloat()); //todo backlog: DNA here
-    private float diagonalSizeWhenActivated = (float) Math.sqrt(2.0) * sizeWhenActivated;
+    private final float sizeWhenActivated;
+    private final float diagonalSizeWhenActivated;
 
-    //todo refactor: Muscle(float sizeWhenActivated);
+    Muscle(float sizeWhenActivated) {
+        this.sizeWhenActivated = sizeWhenActivated;
+        this.diagonalSizeWhenActivated = (float) Math.sqrt(2.0) * sizeWhenActivated;
+    }
 
     public void act() {
         this.isActive = calculateIfActive(inputConnections);
@@ -56,10 +56,9 @@ public class Muscle extends Cell {
     }
 
     @Override
-    public Cell copy() {
-        return Muscle.builder()
-            .
-            .build();
+    public Muscle copy() {
+        Muscle muscle = new Muscle(this.sizeWhenActivated);
+        muscle.setGridPlace(this.getGridPlace());
+        return muscle;
     }
-
 }

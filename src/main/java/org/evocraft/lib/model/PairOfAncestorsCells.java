@@ -1,8 +1,10 @@
 package org.evocraft.lib.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class PairOfAncestorsCells {
 
     Cell one = null, two = null;

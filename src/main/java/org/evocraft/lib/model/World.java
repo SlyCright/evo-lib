@@ -3,19 +3,23 @@ package org.evocraft.lib.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import lombok.Data;
+import java.util.Random;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PVector;
 
-@Data
+@Getter
+@Setter
 public class World implements Actionable {
 
-    private final int SPECIMENS_TOTAL = 5;
+    private final int SPECIMENS_TOTAL = 6;
     private final int EPOCH_LASTING_TICKS = 1000;
-    final private float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
+    private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
+    private final float ANCESTORS_PORTION_WHICH_GIVES_OFFSPRINGS = 1f / 3f;
 
     private ArrayList<Specimen> species;
     private EpochTicker epochTicker = new EpochTicker(EPOCH_LASTING_TICKS);
-    private PVector initialPositionOfSpecimens=new PVector(INITIAL_X_OF_SPECIMEN,INITIAL_Y_OF_SPECIMEN);
+    private PVector initialPositionOfSpecimens = new PVector(INITIAL_X_OF_SPECIMEN, INITIAL_Y_OF_SPECIMEN);
 
     public World() {
         species = createSpecies(SPECIMENS_TOTAL);
@@ -26,7 +30,7 @@ public class World implements Actionable {
         ArrayList<Specimen> species = new ArrayList<>(specimensTotal);
 
         for (int i = 0; i < specimensTotal; i++) {
-            Specimen specimen = specimenBuilder.buildSpecimenAt(initialPositionOfSpecimens);
+            Specimen specimen = specimenBuilder.buildZeroGenerationSpecimenAt(initialPositionOfSpecimens);
             species.add(specimen);
         }
 
@@ -57,7 +61,7 @@ public class World implements Actionable {
             float fitness1 = calculateFitnessOf(s1);
             float fitness2 = calculateFitnessOf(s2);
 
-            return Float.compare(fitness1, fitness2);
+            return Float.compare(fitness2, fitness1);
         };
 
         species.sort(specimenComparator);
@@ -71,13 +75,37 @@ public class World implements Actionable {
     }
 
     private ArrayList<Specimen> crossOverBestFittedOf(ArrayList<Specimen> ancestors) {
-        //todo some code here
+        int offspringsTotal = ancestors.size();
 
-        if (ancestors.size() > 1) {
-            ancestors.remove(0);
+        int ancestorsTotal = Math.round((float) ancestors.size() * ANCESTORS_PORTION_WHICH_GIVES_OFFSPRINGS);
+        for (int i = ancestors.size() - 1; i > ancestorsTotal; i--) {
+            ancestors.remove(i);
         }
-        return ancestors;
+        SpecimenBuilder specimenBuilder = new SpecimenBuilder();
+
+        ArrayList<Specimen> offsprings = new ArrayList<>(offspringsTotal);
+
+        for (int i = 0; i < offspringsTotal; i++) {
+            Specimen ancestorOne = getRandomSpecimenOf(ancestors);
+            Specimen ancestorTwo = getRandomSpecimenOf(ancestors);
+            Specimen offspring = specimenBuilder.buildOffspringSpecimenOf(ancestorOne, ancestorTwo, initialPositionOfSpecimens);
+            offsprings.add(offspring);
+        }
+
+        return offsprings;
     }
+
+    private Specimen getRandomSpecimenOf(ArrayList<Specimen> specimens) {
+        int size = specimens.size();
+        int randomIndex;
+        randomIndex = new Random().nextInt(size);
+        Specimen randomSpecimen = specimens.stream()
+            .skip(randomIndex)
+            .findFirst()
+            .get();
+        return randomSpecimen;
+    }
+
 
     private void mutate(List<Specimen> offsprings) {
         //todo some code here

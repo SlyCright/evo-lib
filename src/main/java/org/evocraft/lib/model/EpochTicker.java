@@ -1,13 +1,15 @@
 package org.evocraft.lib.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class EpochTicker implements Actionable {
 
     private final int EPOCH_LASTING_TICKS;
     private int currentTick;
-    boolean epochEnded = false;
+    private boolean epochEnded = false;
 
     public EpochTicker(int epochLastingTicks) {
         this.EPOCH_LASTING_TICKS = epochLastingTicks;
