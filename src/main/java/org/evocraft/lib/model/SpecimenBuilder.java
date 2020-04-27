@@ -110,6 +110,7 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
         Map<GridPlace, Cell> cellsMapping = new HashMap<>();
         Cell cell = new Neuron(0f); //todo backlog: DNA here
         GridPlace gridPlace = new GridPlace(0, 0);
+        cell.setGridPlace(gridPlace);
         cellsMapping.put(gridPlace, cell);
 
         for (int i = 0; i < CELLS_TOTAL - 1; i++) {

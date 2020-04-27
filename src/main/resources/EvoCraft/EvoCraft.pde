@@ -22,7 +22,7 @@ void draw() {
   
   for (Specimen specimen : species) {
 
-    components=specimen.getSpecimenComponents();
+    components=specimen.getComponents();
 
     for (SpecimenComponent component : components) {
       
