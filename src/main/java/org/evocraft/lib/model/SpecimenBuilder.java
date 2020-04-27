@@ -1,6 +1,5 @@
 package org.evocraft.lib.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +27,67 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
 
     public Specimen buildOffspringSpecimenOf(Specimen specimenOne, Specimen specimenTwo, PVector initialPosition) { //todo refactor: instead of position argument make separated method moveSpecimenToPosition(Specimen, Position)
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling(specimenOne, specimenTwo);
+        Map<GridPlaces, Connection> = connectionsMapFilling(specimenOne, specimenTwo);
         return makeSpecimenOfCellsAndConnections(cellsMapping, null, initialPosition);
+    }
+
+    protected Map<GridPlaces, Connection> connectionsMapFilling(Specimen ancestorOne, Specimen ancestorTwo) {
+        Map<GridPlaces, Cell> offspringCellsMap = new HashMap<>();
+        Map<GridPlace, PairOfAncestorsCells> pairOfAncestorsCellsMap = new HashMap<>();
+        Map<GridPlace, Cell> cellsMapOfAncestorOne = generateCellsMapOf(ancestorOne);
+        Map<GridPlace, Cell> cellsMapOfAncestorTwo = generateCellsMapOf(ancestorTwo);
+        Cell cellOne, cellTwo;
+
+        for (GridPlace gridPlaceOne : cellsMapOfAncestorOne.keySet()) {
+
+            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceOne.i, gridPlaceOne.j);
+            PairOfAncestorsCells pairOfAncestorsCells = new PairOfAncestorsCells();
+            pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
+
+            cellOne = cellsMapOfAncestorOne.get(gridPlaceOne);
+            pairOfAncestorsCells.setOne(cellOne);
+        }
+
+        for (GridPlace gridPlaceTwo : cellsMapOfAncestorTwo.keySet()) {
+
+            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceTwo.i, gridPlaceTwo.j);
+            PairOfAncestorsCells pairOfAncestorsCells = pairOfAncestorsCellsMap.get(gridPlaceOfPair);
+            if (pairOfAncestorsCells == null) {
+                pairOfAncestorsCells = new PairOfAncestorsCells();
+                pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
+            }
+
+            cellTwo = cellsMapOfAncestorOne.get(gridPlaceTwo);
+            pairOfAncestorsCells.setTwo(cellTwo);
+        }
+
+        for (GridPlace gridPlace : pairOfAncestorsCellsMap.keySet()) {
+            GridPlace gridPlaceOffspring = new GridPlace(gridPlace.i, gridPlace.j);
+            Cell offspringCell = null;
+
+            if (new Random().nextFloat() < 0.5f) {
+                Cell one = pairOfAncestorsCellsMap.get(gridPlace).getOne();
+                if (one != null) {
+                    offspringCell = one.copy();
+                }
+            } else {
+                Cell two = pairOfAncestorsCellsMap.get(gridPlace).getTwo();
+                if (two != null) {
+                    offspringCell = two.copy();
+                }
+            }
+
+            if (offspringCell != null) {
+                offspringCellsMap.put(gridPlaceOffspring, offspringCell);
+            }
+        }
+
+        return offspringCellsMap;
     }
 
     private Specimen makeSpecimenOfCellsAndConnections(Map<GridPlace, Cell> cellsMapping, List<Connection> connectionsList, PVector initialPosition) {
         Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
-        List<Connection> connections = generateConnections(cellsMapping);
+        Map<GridPlaces, Connection> connections = generateConnections(cellsMapping);
         linkCellsBetweenNodes(cellsMapping, nodesMapping);
         linkNodesBetweenNodes(nodesMapping);
         setEuclidPositionsToNodes(nodesMapping, initialPosition);
@@ -144,8 +198,8 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
         return cellsMapping;
     }
 
-    private List<Connection> generateConnections(Map<GridPlace, Cell> cellsMapping) {
-        List<Connection> connections = new ArrayList<>();
+    private Map<GridPlaces, Connection> generateConnections(Map<GridPlace, Cell> cellsMapping) {
+        Map<GridPlaces, Connection> connections = new HashMap<>();
         Cell inputCell, outPutCell;
         Connection connection;
         for (int i = 0; i < CONNECTIONS_TOTAL; i++) {
@@ -154,9 +208,15 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
             connection = new Connection(new Random().nextFloat()); //todo backlog: DNA here
             connection.setInput(inputCell);
             connection.setOutput(outPutCell);
+
+            GridPlace inputCellGridPlace = inputCell.getGridPlace();
+            GridPlace outputCellGridPlace = outPutCell.getGridPlace();
+            GridPlaces gridPlaces = new GridPlaces(inputCellGridPlace, outputCellGridPlace); //todo refactor: make this line shorter
+            connection.setGridPlaces(gridPlaces);
+
             inputCell.getOutputConnections().add(connection);
             outPutCell.getInputConnections().add(connection);
-            connections.add(connection);
+            connections.put(gridPlaces, connection);
         }
         return connections;
     }
@@ -350,7 +410,10 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
         }
     }
 
-    private Specimen placeComponentsInSpecimen(Map<GridPlace, Cell> cellsMapping, Map<GridPlace, Node> nodesMapping, List<Connection> connections) {
+    private Specimen placeComponentsInSpecimen(
+        Map<GridPlace, Cell> cellsMapping,
+        Map<GridPlace, Node> nodesMapping,
+        Map<GridPlaces, Connection> connections) {
         Specimen specimen = new Specimen();
 
         for (Cell cell : cellsMapping.values()) {
@@ -361,7 +424,7 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
             specimen.getComponents().add(node);
         }
 
-        for (Connection connection : connections) {
+        for (Connection connection : connections.values()) {
             specimen.getComponents().add(connection);
         }
 

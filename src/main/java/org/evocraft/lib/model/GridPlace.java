@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 final class GridPlace {
 
-    final int i, j;
+   public final int i, j;
 
     GridPlace(int i, int j) {
         this.i = i;

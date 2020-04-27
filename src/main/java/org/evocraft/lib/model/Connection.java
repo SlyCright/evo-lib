@@ -9,6 +9,7 @@ import processing.core.PVector;
 public class Connection extends Activateable {
 
     private Cell input, output;
+    private GridPlaces gridPlaces;
     private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
     private final float WEIGHT;
 

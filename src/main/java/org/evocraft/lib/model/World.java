@@ -12,7 +12,7 @@ import processing.core.PVector;
 @Setter
 public class World implements Actionable {
 
-    private final int SPECIMENS_TOTAL = 6;
+    private final int SPECIMENS_TOTAL = 12;
     private final int EPOCH_LASTING_TICKS = 1000;
     private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
     private final float ANCESTORS_PORTION_WHICH_GIVES_OFFSPRINGS = 1f / 3f;
@@ -68,9 +68,9 @@ public class World implements Actionable {
     }
 
     private float calculateFitnessOf(Specimen specimen) {
-        PVector speoimenPosition = specimen.getPosition().copy();
+        PVector specimenPosition = specimen.getPosition().copy();
         PVector initialPosition = this.initialPositionOfSpecimens.copy();
-        float fitness = PVector.dist(speoimenPosition, initialPosition);
+        float fitness = PVector.dist(specimenPosition, initialPosition);
         return fitness;
     }
 

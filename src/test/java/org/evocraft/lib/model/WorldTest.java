@@ -12,6 +12,8 @@ class WorldTest {
         for (int i = 0; i < epochTicker.getEPOCH_LASTING_TICKS() + 10; i++) {
             world.act();
         }
+
+        System.out.println();
     }
 
 }

@@ -26,6 +26,6 @@ public class EpochTicker implements Actionable {
 
     public void restartEpoch() {
         this.currentTick = EPOCH_LASTING_TICKS;
-        boolean epochEnded = false;
+        this.epochEnded = false;
     }
 }
