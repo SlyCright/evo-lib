@@ -20,6 +20,8 @@ void draw() {
 
   world.act();
   
+species=world.getSpecies();
+  
   for (Specimen specimen : species) {
 
     components=specimen.getComponents();

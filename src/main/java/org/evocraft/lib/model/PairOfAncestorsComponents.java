@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PairOfAncestorsCells {
+public class PairOfAncestorsComponents {
 
-    Cell one = null, two = null;
+    SpecimenComponent one = null, two = null;
 
 }

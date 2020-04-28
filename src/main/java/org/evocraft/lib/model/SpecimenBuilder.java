@@ -22,133 +22,72 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
 
     public Specimen buildZeroGenerationSpecimenAt(PVector initialPosition) {
         Map<GridPlace, Cell> cellsMapping = cellsMapFilling();
-        return makeSpecimenOfCellsAndConnections(cellsMapping, null, initialPosition);
+        return makeSpecimenOfComponents(cellsMapping, null, initialPosition);
     }
 
     public Specimen buildOffspringSpecimenOf(Specimen specimenOne, Specimen specimenTwo, PVector initialPosition) { //todo refactor: instead of position argument make separated method moveSpecimenToPosition(Specimen, Position)
-        Map<GridPlace, Cell> cellsMapping = cellsMapFilling(specimenOne, specimenTwo);
-        Map<GridPlaces, Connection> = connectionsMapFilling(specimenOne, specimenTwo);
-        return makeSpecimenOfCellsAndConnections(cellsMapping, null, initialPosition);
+        Map<Integer, SpecimenComponent> offspringComponents = mapOffspringComponents(specimenOne, specimenTwo);
+        return makeSpecimenOfComponents(offspringComponents, initialPosition);
     }
 
-    protected Map<GridPlaces, Connection> connectionsMapFilling(Specimen ancestorOne, Specimen ancestorTwo) {
-        Map<GridPlaces, Cell> offspringCellsMap = new HashMap<>();
-        Map<GridPlace, PairOfAncestorsCells> pairOfAncestorsCellsMap = new HashMap<>();
-        Map<GridPlace, Cell> cellsMapOfAncestorOne = generateCellsMapOf(ancestorOne);
-        Map<GridPlace, Cell> cellsMapOfAncestorTwo = generateCellsMapOf(ancestorTwo);
-        Cell cellOne, cellTwo;
+    protected Map<Integer, SpecimenComponent> mapOffspringComponents(Specimen ancestorOne, Specimen ancestorTwo) {
+        Map<Integer, SpecimenComponent> offspringComponents = new HashMap<>();
+        Map<Integer, SpecimenComponent> componentsOfAncestorOne = mapComponents(ancestorOne);
+        Map<Integer, SpecimenComponent> componentsOfAncestorTwo = mapComponents(ancestorTwo);
+        Map<Integer, PairOfAncestorsComponents> pairsOfAncestorsComponents = new HashMap<>;
+        mapComponentsPair(pairsOfAncestorsComponents, componentsOfAncestorOne, Pair.ONE);
+        mapComponentsPair(pairsOfAncestorsComponents, componentsOfAncestorTwo, Pair.TWO);
 
-        for (GridPlace gridPlaceOne : cellsMapOfAncestorOne.keySet()) {
+        for (Integer key : pairsOfAncestorsComponents.keySet()) {
 
-            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceOne.i, gridPlaceOne.j);
-            PairOfAncestorsCells pairOfAncestorsCells = new PairOfAncestorsCells();
-            pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
+            PairOfAncestorsComponents pairOfAncestorsComponents = pairsOfAncestorsComponents.get(key);
+            SpecimenComponent componentOne = pairOfAncestorsComponents.getOne();
+            SpecimenComponent componentTwo = pairOfAncestorsComponents.getTwo();
 
-            cellOne = cellsMapOfAncestorOne.get(gridPlaceOne);
-            pairOfAncestorsCells.setOne(cellOne);
-        }
-
-        for (GridPlace gridPlaceTwo : cellsMapOfAncestorTwo.keySet()) {
-
-            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceTwo.i, gridPlaceTwo.j);
-            PairOfAncestorsCells pairOfAncestorsCells = pairOfAncestorsCellsMap.get(gridPlaceOfPair);
-            if (pairOfAncestorsCells == null) {
-                pairOfAncestorsCells = new PairOfAncestorsCells();
-                pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
-            }
-
-            cellTwo = cellsMapOfAncestorOne.get(gridPlaceTwo);
-            pairOfAncestorsCells.setTwo(cellTwo);
-        }
-
-        for (GridPlace gridPlace : pairOfAncestorsCellsMap.keySet()) {
-            GridPlace gridPlaceOffspring = new GridPlace(gridPlace.i, gridPlace.j);
-            Cell offspringCell = null;
+            SpecimenComponent offspringComponent = null;
 
             if (new Random().nextFloat() < 0.5f) {
-                Cell one = pairOfAncestorsCellsMap.get(gridPlace).getOne();
-                if (one != null) {
-                    offspringCell = one.copy();
+                if (componentOne != null) {
+                    offspringComponent = componentOne.copy();
                 }
             } else {
-                Cell two = pairOfAncestorsCellsMap.get(gridPlace).getTwo();
-                if (two != null) {
-                    offspringCell = two.copy();
+                if (componentTwo != null) {
+                    offspringComponent = componentTwo.copy();
                 }
             }
 
-            if (offspringCell != null) {
-                offspringCellsMap.put(gridPlaceOffspring, offspringCell);
+            if (offspringComponent != null) {
+                offspringComponents.put(key, offspringComponent);
             }
         }
 
-        return offspringCellsMap;
+        return offspringComponents;
     }
 
-    private Specimen makeSpecimenOfCellsAndConnections(Map<GridPlace, Cell> cellsMapping, List<Connection> connectionsList, PVector initialPosition) {
-        Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
-        Map<GridPlaces, Connection> connections = generateConnections(cellsMapping);
-        linkCellsBetweenNodes(cellsMapping, nodesMapping);
-        linkNodesBetweenNodes(nodesMapping);
-        setEuclidPositionsToNodes(nodesMapping, initialPosition);
-        return placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
+    private void mapComponentsPair(
+        Map<Integer, PairOfAncestorsComponents> pairsOfAncestorsComponents,
+        Map<Integer, SpecimenComponent> componentsOfAncestor,
+        Pair ancestorNumber) {
+
+        for (SpecimenComponent component : componentsOfAncestor.values()) {
+            int key = component.hashCode();
+            PairOfAncestorsComponents pairOfAncestorsComponents = pairsOfAncestorsComponents.get(key);
+            if (pairOfAncestorsComponents == null) {
+                pairOfAncestorsComponents = new PairOfAncestorsComponents();
+                pairsOfAncestorsComponents.put(key, pairOfAncestorsComponents);
+            }
+            switch (ancestorNumber) {
+                case ONE:
+                    pairOfAncestorsComponents.setOne(component);
+                    break;
+                case TWO:
+                    pairOfAncestorsComponents.setTwo(component);
+                    break;
+            }
+        }
     }
 
-    protected Map<GridPlace, Cell> cellsMapFilling(Specimen ancestorOne, Specimen ancestorTwo) {
-        Map<GridPlace, Cell> offspringCellsMap = new HashMap<>();
-        Map<GridPlace, PairOfAncestorsCells> pairOfAncestorsCellsMap = new HashMap<>();
-        Map<GridPlace, Cell> cellsMapOfAncestorOne = generateCellsMapOf(ancestorOne);
-        Map<GridPlace, Cell> cellsMapOfAncestorTwo = generateCellsMapOf(ancestorTwo);
-        Cell cellOne, cellTwo;
-
-        for (GridPlace gridPlaceOne : cellsMapOfAncestorOne.keySet()) {
-
-            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceOne.i, gridPlaceOne.j);
-            PairOfAncestorsCells pairOfAncestorsCells = new PairOfAncestorsCells();
-            pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
-
-            cellOne = cellsMapOfAncestorOne.get(gridPlaceOne);
-            pairOfAncestorsCells.setOne(cellOne);
-        }
-
-        for (GridPlace gridPlaceTwo : cellsMapOfAncestorTwo.keySet()) {
-
-            GridPlace gridPlaceOfPair = new GridPlace(gridPlaceTwo.i, gridPlaceTwo.j);
-            PairOfAncestorsCells pairOfAncestorsCells = pairOfAncestorsCellsMap.get(gridPlaceOfPair);
-            if (pairOfAncestorsCells == null) {
-                pairOfAncestorsCells = new PairOfAncestorsCells();
-                pairOfAncestorsCellsMap.put(gridPlaceOfPair, pairOfAncestorsCells);
-            }
-
-            cellTwo = cellsMapOfAncestorOne.get(gridPlaceTwo);
-            pairOfAncestorsCells.setTwo(cellTwo);
-        }
-
-        for (GridPlace gridPlace : pairOfAncestorsCellsMap.keySet()) {
-            GridPlace gridPlaceOffspring = new GridPlace(gridPlace.i, gridPlace.j);
-            Cell offspringCell = null;
-
-            if (new Random().nextFloat() < 0.5f) {
-                Cell one = pairOfAncestorsCellsMap.get(gridPlace).getOne();
-                if (one != null) {
-                    offspringCell = one.copy();
-                }
-            } else {
-                Cell two = pairOfAncestorsCellsMap.get(gridPlace).getTwo();
-                if (two != null) {
-                    offspringCell = two.copy();
-                }
-            }
-
-            if (offspringCell != null) {
-                offspringCellsMap.put(gridPlaceOffspring, offspringCell);
-            }
-        }
-
-        return offspringCellsMap;
-    }
-
-    private Map<GridPlace, Cell> generateCellsMapOf(Specimen specimen) {
+    private Map<Integer, SpecimenComponent> mapComponents(Specimen specimen) {
         Map<GridPlace, Cell> cellsMap = new HashMap<>();
         for (SpecimenComponent component : specimen.getComponents()) {
             if (component instanceof Cell) {
@@ -159,6 +98,14 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
         return cellsMap;
     }
 
+    private Specimen makeSpecimenOfComponents(Map<GridPlace, Cell> cellsMapping, List<Connection> connectionsList, PVector initialPosition) {
+        Map<GridPlace, Node> nodesMapping = nodesMapFilling(cellsMapping);
+        Map<GridPlaces, Connection> connections = generateConnections(cellsMapping);
+        linkCellsBetweenNodes(cellsMapping, nodesMapping);
+        linkNodesBetweenNodes(nodesMapping);
+        setEuclidPositionsToNodes(nodesMapping, initialPosition);
+        return placeComponentsInSpecimen(cellsMapping, nodesMapping, connections);
+    }
 
     protected Map<GridPlace, Cell> cellsMapFilling() {
         Map<GridPlace, Cell> cellsMapping = new HashMap<>();

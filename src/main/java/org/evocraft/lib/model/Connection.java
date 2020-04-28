@@ -1,19 +1,21 @@
 package org.evocraft.lib.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
 
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"inputGridPlace", "outputGridPlace"})
 public class Connection extends Activateable {
 
     private Cell input, output;
-    private GridPlaces gridPlaces;
+    private GridPlace inputGridPlace, outputGridPlace;
     private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
     private final float WEIGHT;
 
-    Connection(float WEIGHT) {
+    Connection(float WEIGHT, boolean dontForgetSetGridPlacesAfterConnectionCreation) {
         this.WEIGHT = WEIGHT;
     }
 
@@ -21,7 +23,7 @@ public class Connection extends Activateable {
     public void act() {
         initialPosition = input.getPosition().copy();
         terminalPosition = output.getPosition().copy();
-        this.isActive=input.isActive();
+        this.isActive = input.isActive();
     }
 
     public float getSignal() {

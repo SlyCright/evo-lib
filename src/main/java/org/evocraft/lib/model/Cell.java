@@ -2,13 +2,14 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
 
 @Getter
 @Setter
-//@NoArgsConstructor
+@EqualsAndHashCode(of = "gridPlace")
 public abstract class Cell extends Activateable {
 
     final static public float CELL_SIZE = 50f; //todo backlog: should depend of DNA
@@ -89,4 +90,5 @@ public abstract class Cell extends Activateable {
     }
 
     public abstract Cell copy();
+
 }
