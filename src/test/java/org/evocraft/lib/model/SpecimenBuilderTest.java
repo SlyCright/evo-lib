@@ -31,7 +31,7 @@ class SpecimenBuilderTest {
     void cellMapFilling() throws NoSuchFieldException, IllegalAccessException {
         SpecimenBuilder specimenBuilder = new SpecimenBuilder();
 
-        Map<GridPlace, Cell> gridPlaceCellMap = specimenBuilder.cellsMapFilling();
+        Map<GridPlace, Cell> gridPlaceCellMap = specimenBuilder.generateCellsIn(components);
 
         assertTrue(gridPlaceCellMap.size() > 1);
     }

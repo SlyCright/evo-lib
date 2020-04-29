@@ -2,6 +2,8 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;

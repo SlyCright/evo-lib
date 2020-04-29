@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class PairOfAncestorsComponents {
 
-    SpecimenComponent one = null, two = null;
+    SpecimenComponent left = null, right = null;
 
 }

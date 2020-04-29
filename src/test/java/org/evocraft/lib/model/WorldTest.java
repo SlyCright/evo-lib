@@ -13,6 +13,8 @@ class WorldTest {
             world.act();
         }
 
+
+
         System.out.println();
     }
 

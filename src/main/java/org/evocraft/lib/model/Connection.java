@@ -13,10 +13,10 @@ public class Connection extends Activateable {
     private Cell input, output;
     private GridPlace inputGridPlace, outputGridPlace;
     private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
-    private final float WEIGHT;
+    private float weight;
 
-    Connection(float WEIGHT, boolean dontForgetSetGridPlacesAfterConnectionCreation) {
-        this.WEIGHT = WEIGHT;
+    Connection(float weight) {
+        this.weight = weight;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Connection extends Activateable {
 
     public float getSignal() {
         if (input.isActive()) {
-            return WEIGHT;
+            return weight;
         } else {
             return 0f;
         }
