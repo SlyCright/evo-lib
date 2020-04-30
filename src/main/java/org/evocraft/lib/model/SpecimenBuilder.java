@@ -103,6 +103,7 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
 
     private Specimen makeSpecimenOf(Map<Integer, SpecimenComponent> components, PVector initialPosition) {
         addNodesTo(components);
+        bindCellsBetweenCells(components);
         bindCellsBetweenNodes(components);
         bindNodesBetweenNodes(components);
         setEuclidPositionsToNodes(components, initialPosition);
@@ -218,33 +219,77 @@ public class SpecimenBuilder { //todo refactor: the class is too large make seve
         for (SpecimenComponent component : components.values()) {
             if (component instanceof Cell) {
                 Cell cell = (Cell) components;
-                cellGridPlace=cell.getGridPlace();
+                cellGridPlace = cell.getGridPlace();
                 for (Direction direction : Direction.values()) {
                     switch (direction) {
                         case UP:
                             i = cellGridPlace.i - 1;
                             j = cellGridPlace.j - 1;
                             nodeGridPlace = new GridPlace(i, j);
-                            components.put(nodeGridPlace.hashCode(),new Node());
+                            components.put(nodeGridPlace.hashCode(), new Node());
                             break;
                         case LEFT:
                             i = cellGridPlace.i + 1;
                             j = cellGridPlace.j - 1;
                             nodeGridPlace = new GridPlace(i, j);
-                            components.put(nodeGridPlace.hashCode(),new Node());
+                            components.put(nodeGridPlace.hashCode(), new Node());
                             break;
                         case DOWN:
                             i = cellGridPlace.i + 1;
                             j = cellGridPlace.j + 1;
                             nodeGridPlace = new GridPlace(i, j);
-                            components.put(nodeGridPlace.hashCode(),new Node());
+                            components.put(nodeGridPlace.hashCode(), new Node());
                             break;
                         case RIGHT:
                             i = cellGridPlace.i - 1;
                             j = cellGridPlace.j + 1;
                             nodeGridPlace = new GridPlace(i, j);
-                            components.put(nodeGridPlace.hashCode(),new Node());
+                            components.put(nodeGridPlace.hashCode(), new Node());
                             break;
+                    }
+                }
+            }
+        }
+    }
+
+    protected void bindCellsBetweenCells(Map<Integer, SpecimenComponent> components) {
+        int adjacentCellI = 0, adjacentCellJ = 0;
+        Cell cell;
+        GridPlace cellGridPlace, adjacentCellGridPlace;
+        Cell adjacentCell;
+        for (SpecimenComponent component : components.values()) {
+            if (component instanceof Cell) {
+                cell = (Cell) component;
+                cellGridPlace=cell.getGridPlace();
+                for (Direction direction : Direction.values()) {
+                    switch (direction) {
+                        case UP:
+                            adjacentCellI = cellGridPlace.i;
+                            adjacentCellJ = cellGridPlace.j - 2;
+                            bindAdjacentCells(cellGridPlace,adjacentCellJ);
+                            break;
+                        case RIGHT:
+                            adjacentCellI = cellGridPlace.i + 2;
+                            adjacentCellJ = cellGridPlace.j;
+                            bindAdjacentCells(cellGridPlace,adjacentCellJ);
+                            break;
+                        case DOWN:
+                            adjacentCellI = cellGridPlace.i;
+                            adjacentCellJ = cellGridPlace.j + 2;
+                            bindAdjacentCells(cellGridPlace,adjacentCellJ);
+                            break;
+                        case LEFT:
+                            adjacentCellI = cellGridPlace.i - 2;
+                            adjacentCellJ = cellGridPlace.j;
+                            bindAdjacentCells(cellGridPlace,adjacentCellJ);
+                            break;
+                    }
+
+//todo refactor: here is method linkCellsBetweenCells
+                    adjacentCellGridPlace = new GridPlace(adjacentCellI, adjacentCellJ);
+                    adjacentCell = cellsMapping.get(adjacentCellGridPlace);
+                    if (adjacentCell != null) {
+                        cell.getAdjacentCells().add(adjacentCell);
                     }
                 }
             }

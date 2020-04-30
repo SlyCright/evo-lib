@@ -17,7 +17,7 @@ public abstract class Cell extends Activateable {
 
     private float cellsInteractionStiffness = 0.25f * STIFFNESS; //todo refactor: delete if don't used
 
-    protected final float DIAGONAL_CELL_SIZE = (float) Math.sqrt(2.0) * CELL_SIZE;
+    protected final float diagonalCellSize = (float) Math.sqrt(2.0) * CELL_SIZE;
 
     private List<Node> adjacentNodes = new ArrayList<>(4);
     private List<Cell> adjacentCells = new ArrayList<>(4);
@@ -48,8 +48,6 @@ public abstract class Cell extends Activateable {
     }
 
     private void applyForcesToNodes() {
-
-//todo refactor: separate method
         for (Node node : adjacentNodes) {
             PVector nodePosition = node.getPosition().copy();
             PVector cellPosition = this.getPosition().copy();
@@ -62,23 +60,6 @@ public abstract class Cell extends Activateable {
             force.mult(forceValue);
             node.applyForce(force);
         }
-
-  /*
-//todo refactor: separate method. This way to calculate itercellar forces. If use should be designed by DNA
-        for (Cell adjacentCell : adjacentCells) {
-            PVector adjacentCellPosition = adjacentCell.getPosition().copy();
-            PVector cellPosition = this.getPosition().copy();
-            PVector forceDirection = PVector.sub(adjacentCellPosition, cellPosition);
-            forceDirection.normalize();
-            float distanceToAdjacentCell = position.dist(adjacentCellPosition);
-            float forceValue = cellsInteractionStiffness * (distanceToAdjacentCell - CELL_SIZE);
-            PVector force = forceDirection.copy();
-            force.mult(forceValue);
-            for (Node adjacentNode : this.getAdjacentNodes()) {
-                adjacentNode.applyForce(force);
-            }
-        }
-*/
     }
 
     public float getSize() {
@@ -86,7 +67,7 @@ public abstract class Cell extends Activateable {
     }
 
     public float getDiagonalSize() {
-        return DIAGONAL_CELL_SIZE;
+        return diagonalCellSize;
     }
 
     public abstract Cell copy();

@@ -50,7 +50,7 @@ public class Muscle extends Cell {
         if (isActive) {
             diagonalSize = diagonalSizeWhenActivated;
         } else {
-            diagonalSize = DIAGONAL_CELL_SIZE;
+            diagonalSize = diagonalCellSize;
         }
         return diagonalSize;
     }
