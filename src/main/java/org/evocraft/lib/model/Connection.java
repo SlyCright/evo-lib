@@ -7,11 +7,11 @@ import processing.core.PVector;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"inputGridPlace", "outputGridPlace"})
-public class Connection extends Activateable {
+@EqualsAndHashCode(of = {"inputTileIndex", "outputTileIndex"}, callSuper = false)
+public class Connection extends SpecimenComponent {
 
     private Cell input, output;
-    private GridPlace inputGridPlace, outputGridPlace;
+    private TileIndex inputTileIndex, outputTileIndex;
     private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
     private float weight;
 
@@ -34,4 +34,10 @@ public class Connection extends Activateable {
         }
     }
 
+    public Connection copy() {
+        Connection connection = new Connection(this.weight);
+        connection.setInputTileIndex(this.inputTileIndex);
+        connection.setOutputTileIndex(this.outputTileIndex);
+        return connection;
+    }
 }

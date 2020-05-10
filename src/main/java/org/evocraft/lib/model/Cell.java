@@ -2,32 +2,27 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "gridPlace")
-public abstract class Cell extends Activateable {
+public abstract class Cell extends SpecimenComponent {
 
-    final static public float CELL_SIZE = 50f; //todo backlog: should depend of DNA
     final private float STIFFNESS = 0.01f; //todo backlog: should depend of DNA
 
-    private float cellsInteractionStiffness = 0.25f * STIFFNESS; //todo refactor: delete if don't used
-
-    protected final float diagonalCellSize = (float) Math.sqrt(2.0) * CELL_SIZE;
+    protected final float diagonalCellSize = (float) Math.sqrt(2.0) * Membrane.LENGTH;
 
     private List<Node> adjacentNodes = new ArrayList<>(4);
-    private List<Cell> adjacentCells = new ArrayList<>(4);
 
     private PVector position = new PVector(0, 0);
 
     protected List<Connection> inputConnections = new ArrayList<>();
     protected List<Connection> outputConnections = new ArrayList<>();
 
-    private GridPlace gridPlace;
+    private TileIndex tileIndex;
 
     @Override
     public void act() {
@@ -63,13 +58,11 @@ public abstract class Cell extends Activateable {
     }
 
     public float getSize() {
-        return CELL_SIZE;
+        return Membrane.LENGTH;
     }
 
     public float getDiagonalSize() {
         return diagonalCellSize;
     }
-
-    public abstract Cell copy();
 
 }

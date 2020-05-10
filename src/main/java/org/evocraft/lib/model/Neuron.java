@@ -34,11 +34,4 @@ public class Neuron extends Cell {
         return isActive;
     }
 
-    @Override
-    public Neuron copy() {
-        Neuron neuron = new Neuron(this.threshold);
-        neuron.setGridPlace(this.getGridPlace());
-        return neuron;
-    }
-
 }

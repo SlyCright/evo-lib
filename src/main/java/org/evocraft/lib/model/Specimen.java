@@ -1,6 +1,9 @@
 package org.evocraft.lib.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -9,29 +12,28 @@ import processing.core.PVector;
 @Setter
 public class Specimen implements Actionable {
 
+    private Map<Integer, Cell> cells = new HashMap<>();
+    private Map<Integer, Connection> connections = new HashMap<>();
+
+    private Map<Integer, Membrane> membranes = new HashMap<>();
+    private Map<Integer, Node> nodes = new HashMap<>();
+
     private ArrayList<SpecimenComponent> components = new ArrayList<>();
 
     @Override
     public void act() {
-        for (SpecimenComponent specimenComponent : components) {
+        for (SpecimenComponent specimenComponent : this.components) {
             specimenComponent.act();
         }
     }
 
-    public PVector getPosition() {
-        float posX = 0f, posY = 0f;
-        int cellsTotal = 0;
-        for (SpecimenComponent component : this.components) {
-            if (component instanceof Cell) {
-                PVector cellPosition = ((Cell) component).getPosition().copy();
-                posX += cellPosition.x;
-                posY += cellPosition.y;
-                cellsTotal++;
-            }
+    public PVector calculatePosition() {
+        PVector position = new PVector(0f, 0f);
+        for (Node node : this.nodes.values()) {
+            position.add(node.getPosition());
         }
-        posX /= cellsTotal;
-        posY /= cellsTotal;
-        return new PVector(posX, posY);
+        int nodesTotal = this.nodes.size();
+        position.div((float) nodesTotal);
+        return position;
     }
-
 }

@@ -92,7 +92,7 @@ species=world.getSpecies();
         Connection connection=(Connection)component;
         PVector initialPosition=connection.getInitialPosition().copy();
         PVector terminalPosition=connection.getTerminalPosition().copy();
-        float weight=connection.getWEIGHT();
+        float weight=connection.getWeight();
 
         if (connection.isActive()) {
           stroke(180, 180, 180);

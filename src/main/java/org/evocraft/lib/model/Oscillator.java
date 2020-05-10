@@ -24,12 +24,4 @@ public class Oscillator extends Cell { //todo backlog: add some more types of os
 
         super.act();
     }
-
-    @Override
-    public Oscillator copy() {
-        Oscillator oscillator = new Oscillator(this.ACTIVATION_PERIOD_TICKS);
-        oscillator.setGridPlace(this.getGridPlace());
-        return oscillator;
-    }
-
 }
