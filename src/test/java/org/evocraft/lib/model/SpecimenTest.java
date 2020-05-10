@@ -1,13 +1,12 @@
 package org.evocraft.lib.model;
 
-import org.junit.jupiter.api.Test;
-import processing.core.PVector;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import processing.core.PVector;
 
 class SpecimenTest {
 
@@ -25,7 +24,7 @@ class SpecimenTest {
             Node node = new Node();
             node.setPosition(new PVector(x, y));
             node.setTileIndex(new TileIndex(i, i));
-            nodes.put(node.hashCode(), node);
+            nodes.put(node.getTileIndex().hashCode(), node);
         }
         midX /= (float) nodesTotal;
         midY /= (float) nodesTotal;

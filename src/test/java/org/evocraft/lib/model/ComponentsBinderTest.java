@@ -1,17 +1,17 @@
 package org.evocraft.lib.model;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ComponentsBinderTest {
 
     @Test
     void bindCellsAndConnections() {
-        Map<Integer, Cell> cells = CellsBuilder.generateCells(3);
+        Map<Integer, Cell> cells = CellsBuilder.generateCells(3); //todo make particulars cells and connections and check binds
         Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 100);
 
         assertEquals(6, connections.size());

@@ -1,14 +1,37 @@
 package org.evocraft.lib.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import processing.core.PVector;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@ExtendWith(MockitoExtension.class)
 class MembraneTest {
+
+    @Spy
+    private Membrane membrane;
 
     @Test
     void act() {
-        new Membrane().act();
+        PVector pVector = new PVector(1000f, 0f);
+
+        when(membrane.calculateMembraneVector()).thenReturn(pVector);
+        when(membrane.calculateShouldBeLength()).thenReturn(0f);
+
+        membrane.act();
+
+        assertEquals(pVector, membrane.getMembrane());
+        verify(membrane).applyForceToAdjacentNode(eq(-25f), any(Node.class));
+        verify(membrane).applyForceToAdjacentNode(eq(25f), any(Node.class));
     }
 
     @Test
@@ -23,7 +46,6 @@ class MembraneTest {
 
         membrane.applyLength(0, -Membrane.LENGTH);
         assertTrue(Math.abs(membrane.calculateShouldBeLength()) < epsilon);
-
 
         membrane.applyLength(1, Membrane.LENGTH);
         assertTrue(Math.abs(membrane.calculateShouldBeLength()) < epsilon);
@@ -43,4 +65,5 @@ class MembraneTest {
     void applyLength() {
         new Membrane().applyLength(0, 0f);
     }
+
 }

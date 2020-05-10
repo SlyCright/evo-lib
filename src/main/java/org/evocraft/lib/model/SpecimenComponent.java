@@ -14,7 +14,7 @@ public abstract class SpecimenComponent implements Actionable {
     // todo refactor: make constructor SpecimenComponent(TileIndex tileIndex)
 
     @SneakyThrows
-    public int hashCode() { // never use this
-        throw new Exception();
+    public int hashCode() {
+        throw new Exception("Never calculate hashcode of components. Take hash code of TileIndex only");
     }
 }
