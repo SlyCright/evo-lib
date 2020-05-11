@@ -12,9 +12,15 @@ class ComponentsBinderTest {
     @Test
     void bindCellsAndConnections() {
         Map<Integer, Cell> cells = CellsBuilder.generateCells(3); //todo make particulars cells and connections and check binds
-        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 100);
+        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 10000);
 
-        assertEquals(6, connections.size());
+        for (Connection connection : connections.values()) {
+            TileIndex from=connection.getInputTileIndex();
+            TileIndex to=connection.getOutputTileIndex();
+            System.out.println("from:"+from.i+","+from.j+" to:"+to.i+","+to.j);
+        }
+
+        assertEquals(9, connections.size());
 
         ComponentsBinder.bindCellsAndConnections(cells, connections);
 
@@ -37,7 +43,6 @@ class ComponentsBinderTest {
         assertEquals(cellsTotal, cells.size());//todo move to another test
 
         Map<Integer, Node> nodes = NodesBuilder.generateNodes(cells);
-        assertEquals(cellsTotal * 4, nodes.size());//todo move to another test
 
         for (Cell cell : cells.values()) {
             assertEquals(0, cell.getAdjacentNodes().size());
@@ -48,8 +53,5 @@ class ComponentsBinderTest {
         for (Cell cell : cells.values()) {
             assertEquals(4, cell.getAdjacentNodes().size());
         }
-
-
-        assertTrue(false);
     }
 }

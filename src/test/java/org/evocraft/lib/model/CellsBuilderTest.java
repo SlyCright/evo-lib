@@ -15,12 +15,7 @@ class CellsBuilderTest {
         Map<Integer, Cell> cells = CellsBuilder.generateCells(cellsTotal);
 
         assertNotNull(cells);
-        assertTrue(cells.size() > 0);
-        assertTrue(cells.size() < cellsTotal);
-
-        for (Cell cell : cells.values()) {
-            assertNotNull(cell);
-        }
+        assertTrue(cells.size() == cellsTotal);
     }
 
     @Test
