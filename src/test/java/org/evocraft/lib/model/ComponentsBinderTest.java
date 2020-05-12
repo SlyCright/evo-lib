@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 class ComponentsBinderTest {
@@ -12,21 +13,19 @@ class ComponentsBinderTest {
     @Test
     void bindCellsAndConnections() {
         Map<Integer, Cell> cells = CellsBuilder.generateCells(3); //todo make particulars cells and connections and check binds
-        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 10000);
+        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 100);
 
-        for (Connection connection : connections.values()) {
-            TileIndex from=connection.getInputTileIndex();
-            TileIndex to=connection.getOutputTileIndex();
-            System.out.println("from:"+from.i+","+from.j+" to:"+to.i+","+to.j);
-        }
-
-        assertEquals(9, connections.size());
+        int sizeIfHashCanCollide = connections.size();
+        assertTrue(8 <= sizeIfHashCanCollide && sizeIfHashCanCollide <= 9);
 
         ComponentsBinder.bindCellsAndConnections(cells, connections);
 
         for (Cell cell : cells.values()) {
-            assertEquals(2, cell.getInputConnections().size());
-            assertEquals(2, cell.getOutputConnections().size());
+            int sizeInput = cell.getInputConnections().size();
+            assertTrue(2 <= sizeInput && sizeInput <= 3);
+            int sizeOutput = cell.getOutputConnections().size();
+            assertTrue(2 <= sizeOutput && sizeOutput <= 3);
+
         }
 
         for (Connection connection : connections.values()) {

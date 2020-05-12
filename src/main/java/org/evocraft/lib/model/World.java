@@ -13,7 +13,7 @@ import processing.core.PVector;
 public class World implements Actionable {
 
     private final int SPECIMENS_TOTAL = 12;
-    private final int EPOCH_LASTING_TICKS = 1000;
+    private final int EPOCH_LASTING_TICKS = 1_000;
     private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
 
     private ArrayList<Specimen> species;
@@ -27,12 +27,13 @@ public class World implements Actionable {
 
     @Override
     public void act() {
+        calculateNextTickFor(species);
         epochTicker.act();
+
         if (epochTicker.isEpochEnded()) {
             species = createNextGenerationOf(species);
             epochTicker.restartEpoch();
         }
-        calculateNextTickFor(species);
     }
 
     private ArrayList<Specimen> createNextGenerationOf(ArrayList<Specimen> ancestors) {

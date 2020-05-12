@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 public abstract class SpecimenComponent implements Actionable {
 
     protected boolean isActive = false; //todo refactor: not all inheritances uses this field
-    protected TileIndex tileIndex;// = new TileIndex(0, 0); //todo refactor: not all inheritances uses this field
+    protected TileIndex tileIndex = new TileIndex(0, 0);// = new TileIndex(0, 0); //todo refactor: not all inheritances uses this field
 
     // todo refactor: make constructor SpecimenComponent(TileIndex tileIndex)
 

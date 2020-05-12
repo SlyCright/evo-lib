@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import processing.core.PVector;
 
@@ -29,7 +31,7 @@ class SpecimenTest {
         midX /= (float) nodesTotal;
         midY /= (float) nodesTotal;
         specimen.setNodes(nodes);
-        float epsilon = Float.MIN_VALUE;
+        float epsilon = 0.000001f;
 
         PVector position = specimen.calculatePosition();
 

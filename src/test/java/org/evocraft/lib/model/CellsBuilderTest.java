@@ -1,5 +1,6 @@
 package org.evocraft.lib.model;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -60,16 +61,16 @@ class CellsBuilderTest {
         assertTrue(sum == 2 || sum == -2);
     }
 
-    @Test
+    @Ignore
+// @Test
     void ifHashCodesCollide() {
-        
 
         Map<Integer, Cell> cells = new HashMap<>();
 
         int i = 0, j = 0;
         int iStep = 0, jStep = 0;
 
-        for (;true;) {
+        while (true) {
             TileIndex tileIndex = new TileIndex(i, j);
             Muscle muscle = new Muscle(0f);
             muscle.setTileIndex(tileIndex);
