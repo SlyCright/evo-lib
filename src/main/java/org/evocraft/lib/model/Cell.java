@@ -22,8 +22,6 @@ public abstract class Cell extends SpecimenComponent {
     protected List<Connection> inputConnections = new ArrayList<>();
     protected List<Connection> outputConnections = new ArrayList<>();
 
-    private TileIndex tileIndex;
-
     @Override
     public void act() {
         calculatePosition();

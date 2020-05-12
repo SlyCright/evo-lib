@@ -25,32 +25,44 @@ class ConnectionBuilderTest {
         cells = CellsBuilder.generateCells(cellsTotal);
         Connection connectionOne = new Connection(0f);
         Connection connectionTwo = new Connection(0f);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             Cell inputCellOne = ConnectionBuilder.getRandomCellOf(cells);
             Cell outputCellOne = ConnectionBuilder.getRandomCellOf(cells);
             connectionOne.setInputTileIndex(inputCellOne.getTileIndex());
             connectionOne.setOutputTileIndex(outputCellOne.getTileIndex());
-            for (int j = 0; j < 1000; j++) {
+            for (int j = 0; j < 100; j++) {
                 Cell inputCellTwo = ConnectionBuilder.getRandomCellOf(cells);
                 Cell outputCellTwo = ConnectionBuilder.getRandomCellOf(cells);
                 connectionTwo.setInputTileIndex(inputCellTwo.getTileIndex());
                 connectionTwo.setOutputTileIndex(outputCellTwo.getTileIndex());
 
-                int hashInputOne = inputCellOne.getTileIndex().hashCode(); System.out.println("hashInputOne: "+hashInputOne);
-                int hashInputTwo = inputCellTwo.getTileIndex().hashCode();System.out.println("hashInputTwo: "+hashInputTwo);
-                int hashOutputOne = outputCellOne.getTileIndex().hashCode();System.out.println("hashOutputOne: "+hashOutputOne);
-                int hashOutputTwo = outputCellTwo.getTileIndex().hashCode();System.out.println("hashOutputTwo: "+hashOutputTwo);
+                int hashInputOne = inputCellOne.getTileIndex().hashCode();
+                //              System.out.println("hashInputOne: " + hashInputOne);
+                int hashInputTwo = inputCellTwo.getTileIndex().hashCode();
+                //             System.out.println("hashInputTwo: " + hashInputTwo);
+                int hashOutputOne = outputCellOne.getTileIndex().hashCode();
+                //              System.out.println("hashOutputOne: " + hashOutputOne);
+                int hashOutputTwo = outputCellTwo.getTileIndex().hashCode();
+                //              System.out.println("hashOutputTwo: " + hashOutputTwo);
 
                 if (hashInputOne != hashInputTwo
                         || hashOutputOne != hashOutputTwo) {
                     int hashOne = connectionOne.hashCode();
                     int hashTwo = connectionTwo.hashCode();
-                    System.out.println("one i;" + connectionOne.getInput().getTileIndex().i +
-                            " one j:" + connectionOne.getInput().getTileIndex().j +
-                            " one hash;" + connectionOne.hashCode());
-                    System.out.println("two i;" + connectionTwo.getInput().getTileIndex().i +
-                            " two j:" + connectionTwo.getInput().getTileIndex().j +
-                            " two hash;" + connectionTwo.hashCode());
+                    System.out.println("one from ;" + connectionOne.getInputTileIndex().i +
+                            ", " + connectionOne.getInputTileIndex().j +
+                            " to ;" + connectionOne.getOutputTileIndex().i +
+                            " , " + connectionOne.getOutputTileIndex().j +
+                            ". one hash;" + connectionOne.hashCode());
+
+                    System.out.println("two from ;" + connectionTwo.getInputTileIndex().i +
+                            ", " + connectionTwo.getInputTileIndex().j +
+                            " to ;" + connectionTwo.getOutputTileIndex().i +
+                            ", " + connectionTwo.getOutputTileIndex().j +
+                            ". two hash;" + connectionTwo.hashCode());
+
+                    System.out.println(" ");
+
                     assertFalse(hashOne == hashTwo);
                 }
             }
