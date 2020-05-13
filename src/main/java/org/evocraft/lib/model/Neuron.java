@@ -34,4 +34,9 @@ public class Neuron extends Cell {
         return isActive;
     }
 
+    @Override
+    public Cell copy() {
+        return Copier.copy(this);
+    }
+
 }

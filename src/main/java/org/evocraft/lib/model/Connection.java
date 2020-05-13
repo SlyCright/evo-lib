@@ -35,9 +35,6 @@ public class Connection extends SpecimenComponent {
     }
 
     public Connection copy() {
-        Connection connection = new Connection(this.weight);
-        connection.setInputTileIndex(this.inputTileIndex);
-        connection.setOutputTileIndex(this.outputTileIndex);
-        return connection;
+        return Copier.copy(this);
     }
 }

@@ -24,4 +24,9 @@ public class Oscillator extends Cell { //todo backlog: add some more types of os
 
         super.act();
     }
+
+    @Override
+    public Cell copy() {
+        return Copier.copy(this);
+    }
 }

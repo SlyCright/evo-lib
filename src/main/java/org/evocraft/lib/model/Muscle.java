@@ -2,7 +2,6 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +26,7 @@ public class Muscle extends Cell {
         super.act();
     }
 
+
     protected void applySizeToMembranes(float currentSize) {
         for (Membrane membrane : adjacentMembranes) {
             membrane.applyLength(this.hashCode(), currentSize);
@@ -45,4 +45,10 @@ public class Muscle extends Cell {
 
         return isActive;
     }
+
+    @Override
+    public Cell copy() {
+        return Copier.copy(this);
+    }
+
 }

@@ -2,7 +2,6 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -47,7 +46,7 @@ public abstract class Cell extends SpecimenComponent {
             PVector forceDirection = PVector.sub(nodePosition, cellPosition);
             forceDirection.normalize();
             float distanceToNode = position.dist(nodePosition);
-            float thisCellDiagonalSize = this.getDiagonalSize();
+            float thisCellDiagonalSize = this.getDiagonalCellSize();
             float forceValue = -1 * STIFFNESS * (distanceToNode - thisCellDiagonalSize / 2f);
             PVector force = forceDirection.copy();
             force.mult(forceValue);
@@ -55,12 +54,5 @@ public abstract class Cell extends SpecimenComponent {
         }
     }
 
-    public float getSize() {
-        return Membrane.LENGTH;
-    }
-
-    public float getDiagonalSize() {
-        return diagonalCellSize;
-    }
-
+    public abstract Cell copy();
 }
