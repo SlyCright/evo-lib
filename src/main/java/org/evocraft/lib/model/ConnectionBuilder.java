@@ -6,24 +6,33 @@ import java.util.Random;
 
 public class ConnectionBuilder {
 
-    public static Map<Integer, Connection> generateConnections(Map<Integer, Cell> cells, int connectionsTotal) {
+    public static Map<Integer, Connection> generateConnections(Map<Integer, Cell> cells, int generateTimes) {
         Map<Integer, Connection> connections = new HashMap<>();
-        Cell inputCell, outPutCell;
-        Connection connection;
 
-        for (int i = 0; i < connectionsTotal; i++) {
-            float randomWeight=new Random().nextFloat();
-            connection = new Connection(randomWeight);
+        for (int i = 0; i < generateTimes; i++) {
+            insertRandomConnection(connections, cells);
+        }
 
-            inputCell = getRandomCellOf(cells);
-            outPutCell = getRandomCellOf(cells);
+        return connections;
+    }
+
+    protected static void insertRandomConnection(Map<Integer, Connection> connections, Map<Integer, Cell> cells) {
+        float randomWeight = new Random().nextFloat();
+        Connection connection = new Connection(randomWeight);
+        Cell inputCell;
+        Cell outPutCell;
+
+        if (cells.size() > 1) {
+
+            do {
+                inputCell = getRandomCellOf(cells);
+                outPutCell = getRandomCellOf(cells);
+            } while (inputCell.hashCode() == outPutCell.hashCode());
 
             connection.setInputTileIndex(inputCell.getTileIndex());
             connection.setOutputTileIndex(outPutCell.getTileIndex());
-
             connections.put(connection.hashCode(), connection);
         }
-        return connections;
     }
 
     protected static Cell getRandomCellOf(Map<Integer, Cell> cells) {

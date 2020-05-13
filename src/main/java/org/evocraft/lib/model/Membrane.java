@@ -70,4 +70,9 @@ public class Membrane extends SpecimenComponent {
     public void applyLength(int cellHash, float length) {
         this.appliedLengths.put(cellHash, length);
     }
+
+    @Override
+    public SpecimenComponent copy() { //todo refactor: will never used. See todo in Crossoverer class
+        return null;
+    }
 }

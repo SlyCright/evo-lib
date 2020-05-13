@@ -26,4 +26,8 @@ public class Node extends SpecimenComponent {
         acceleration.add(force);
     }
 
+    @Override
+    public SpecimenComponent copy() { //todo refactor: will never used. See todo in Crossoverer class
+        return null;
+    }
 }

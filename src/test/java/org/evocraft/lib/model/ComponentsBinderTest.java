@@ -6,25 +6,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 class ComponentsBinderTest {
 
-    @Test
+    @RepeatedTest(10)
     void bindCellsAndConnections() {
         Map<Integer, Cell> cells = CellsBuilder.generateCells(3); //todo make particulars cells and connections and check binds
         Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, 100);
 
         int sizeIfHashCanCollide = connections.size();
-        assertTrue(8 <= sizeIfHashCanCollide && sizeIfHashCanCollide <= 9);
+        boolean ifSizeOK = (sizeIfHashCanCollide == 5) || (sizeIfHashCanCollide == 6);
+        assertTrue(ifSizeOK);
 
         ComponentsBinder.bindCellsAndConnections(cells, connections);
 
         for (Cell cell : cells.values()) {
             int sizeInput = cell.getInputConnections().size();
-            assertTrue(2 <= sizeInput && sizeInput <= 3);
+            assertTrue(1 <= sizeInput && sizeInput <= 2);
             int sizeOutput = cell.getOutputConnections().size();
-            assertTrue(2 <= sizeOutput && sizeOutput <= 3);
+            assertTrue(1 <= sizeOutput && sizeOutput <= 2);
 
         }
 

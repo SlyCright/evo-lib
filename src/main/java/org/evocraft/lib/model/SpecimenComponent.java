@@ -13,6 +13,8 @@ public abstract class SpecimenComponent implements Actionable {
 
     // todo refactor: make constructor SpecimenComponent(TileIndex tileIndex)
 
+    public abstract SpecimenComponent copy();
+
     public int hashCode() {
         return tileIndex.hashCode();
     }

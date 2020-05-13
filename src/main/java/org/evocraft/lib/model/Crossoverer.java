@@ -8,13 +8,13 @@ import java.util.Random;
 
 public class Crossoverer {
 
-    private static final float ANCESTORS_PORTION_WHICH_GIVES_OFFSPRINGS = 1f / 3f;
+    private static final float SPECIMENS_PORTION_WHICH_BECOMES_ANCESTOR = 1f / 3f;
     private static final int SEXES_TOTAL = 2;
 
     public static ArrayList<Specimen> crossOverBestFittedOf(ArrayList<Specimen> ancestors) {
         int offspringsTotal = ancestors.size();
 
-        killWorstAncestors(ancestors);
+        killWorst(ancestors);
 
         ArrayList<Specimen> offsprings = new ArrayList<>(offspringsTotal);
 
@@ -32,10 +32,10 @@ public class Crossoverer {
         return offsprings;
     }
 
-    protected static void killWorstAncestors(ArrayList<Specimen> ancestors) {
-        int ancestorsTotal = Math.round((float) ancestors.size() * ANCESTORS_PORTION_WHICH_GIVES_OFFSPRINGS);
-        for (int i = ancestors.size() - 1; i > ancestorsTotal; i--) {
-            ancestors.remove(i);
+    protected static void killWorst(ArrayList<Specimen> specimens) {
+        int ancestorsTotal = Math.round((float) specimens.size() * SPECIMENS_PORTION_WHICH_BECOMES_ANCESTOR);
+        for (int i = specimens.size() - 1; i > ancestorsTotal; i--) {
+            specimens.remove(i);
         }
     }
 
@@ -44,66 +44,93 @@ public class Crossoverer {
         int randomIndex;
         randomIndex = new Random().nextInt(size);
         Specimen randomSpecimen = specimens.stream()
-            .skip(randomIndex)
-            .findFirst()
-            .get();
+                .skip(randomIndex)
+                .findFirst()
+                .get();
         return randomSpecimen;
     }
 
     public static Specimen buildOffspringOf(List<Specimen> parents) {
-        List<Cell> parentsCells = new ArrayList<>();
-        List<Connection> parentsConnections = new ArrayList<>();
+        List<SpecimenComponent> parentsComponents = new ArrayList<>(); //todo refactor: use List<Copyable> instead of List<SpecimenComponent>
 
         for (Specimen parent : parents) {
-            parentsCells.addAll(parent.getCells().values());
-            parentsConnections.addAll(parent.getConnections().values());
+            parentsComponents.addAll(parent.getCells().values());
+            parentsComponents.addAll(parent.getConnections().values());
         }
 
-        Map<Integer, Cell> offspringCells = generateOffspringCells(parentsCells);
-        Map<Integer, Connection> offSpringConnections = mapOffspringConnections(parentsConnections);
+        List<SpecimenComponent> offSpringComponents = generateOffspringComponents(parentsComponents);
+
+        Map<Integer, Cell> offspringCells = mapOffspringCells(offSpringComponents);
+        Map<Integer, Connection> offSpringConnections = mapOffspringConnections(offSpringComponents);
+
+        Mutator.mutateCells(offspringCells);
+        Mutator.mutateConnections(offSpringConnections, offspringCells);
 
         return SpecimenBuilder.createSpecimenOfCellsAndConnections(offspringCells, offSpringConnections);
     }
 
-    private static Map<Integer, Cell> generateOffspringCells(List<Cell> listedParentsCells) {
-        Map<Integer, ArrayList<Cell>> mappedParentsCells = mapParentsCells(listedParentsCells);
-        Map<Integer, Cell> offspringCells = mapOffspringCells(mappedParentsCells);
-        Mutator.mutate(offspringCells);
-        return offspringCells;
+    protected static List<SpecimenComponent> generateOffspringComponents(List<SpecimenComponent> parentsComponents) {
+        Map<Integer, List<SpecimenComponent>> mappedParentsComponents = mapParentsComponents(parentsComponents);
+        List<SpecimenComponent> offspringComponents = listOffspringComponents(mappedParentsComponents);
+        return offspringComponents;
     }
 
-    private static Map<Integer, Cell> mapOffspringCells(Map<Integer, ArrayList<Cell>> mappedParentsCells) {
-        Map<Integer, Cell> offspringCells = new HashMap<>();
+    protected static Map<Integer, List<SpecimenComponent>> mapParentsComponents(List<SpecimenComponent> parentsComponents) {
+        Map<Integer, List<SpecimenComponent>> mappedParentsComponents = new HashMap<>();
 
-        for (Integer key : mappedParentsCells.keySet()) {
-            float randomFloat = new Random().nextFloat() * (float) SEXES_TOTAL;
-            long randomIndex = Math.round(Math.floor(randomFloat));
-            List<Cell> parentsCells = mappedParentsCells.get(key);
-            Cell parentCell = parentsCells.get((int) randomIndex);
-            Cell offspringCell=parentCell.copy();
-            offspringCells.put(offspringCell.hashCode(), offspringCell);
-        }
+        for (SpecimenComponent parentComponent : parentsComponents) {
+            int key = parentComponent.hashCode();
+            List<SpecimenComponent> componentsByKey = mappedParentsComponents.get(key);
 
-        return offspringCells;
-    }
-
-    protected static Map<Integer, ArrayList<Cell>> mapParentsCells(List<Cell> parentsCells) {
-        Map<Integer, ArrayList<Cell>> mappedParentsCells = new HashMap<>();
-
-        for (Cell parentCell : parentsCells) {
-            int key = parentCell.hashCode();
-            ArrayList<Cell> cellsForKey = mappedParentsCells.get(key);
-
-            if (cellsForKey == null) {
-                cellsForKey = new ArrayList<>(SEXES_TOTAL);
-                cellsForKey.add(parentCell);
-                mappedParentsCells.put(key, cellsForKey);
+            if (componentsByKey == null) {
+                componentsByKey = new ArrayList<>(SEXES_TOTAL);
+                componentsByKey.add(parentComponent);
+                mappedParentsComponents.put(key, componentsByKey);
             } else {
-                cellsForKey.add(parentCell);
+                componentsByKey.add(parentComponent);
             }
         }
 
-        return mappedParentsCells;
+        return mappedParentsComponents;
+    }
+
+    protected static List<SpecimenComponent> listOffspringComponents(Map<Integer, List<SpecimenComponent>> mappedParentsComponents) {
+        List<SpecimenComponent> offspringComponents = new ArrayList<>();
+
+        for (Integer key : mappedParentsComponents.keySet()) {
+            float randomFloat = new Random().nextFloat() * (float) SEXES_TOTAL;
+            long randomIndex = Math.round(Math.floor(randomFloat));
+            List<SpecimenComponent> parentsComponents = mappedParentsComponents.get(key);
+            if (randomIndex <= parentsComponents.size()) {
+                SpecimenComponent parentComponent = parentsComponents.get((int) randomIndex);
+                SpecimenComponent offspringComponent = parentComponent.copy();
+                offspringComponents.add(offspringComponent);
+            }
+        }
+
+        return offspringComponents;
+    }
+
+    protected static Map<Integer, Cell> mapOffspringCells(List<SpecimenComponent> offSpringComponents) {
+        Map<Integer, Cell> offspringCells = new HashMap<>();
+        for (SpecimenComponent component : offSpringComponents) {
+            if (component instanceof Cell) {
+                Cell cell = (Cell) component;
+                offspringCells.put(cell.hashCode(), cell);
+            }
+        }
+        return offspringCells;
+    }
+
+    protected static Map<Integer, Connection> mapOffspringConnections(List<SpecimenComponent> offSpringComponents) {
+        Map<Integer, Connection> offspringConnections = new HashMap<>();
+        for (SpecimenComponent component : offSpringComponents) {
+            if (component instanceof Connection) {
+                Connection connection = (Connection) component;
+                offspringConnections.put(connection.hashCode(), connection);
+            }
+        }
+        return offspringConnections;
     }
 
 }

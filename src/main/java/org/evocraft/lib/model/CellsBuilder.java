@@ -11,28 +11,30 @@ public class CellsBuilder {
     final static private float NEURON_PORTION = 1f / 3f;
 
     public static Map<Integer, Cell> generateCells(int cellsTotal) {
-
-        TileIndex tileIndex = new TileIndex(0, 0);
-        Cell cell;
         Map<Integer, Cell> cells = new HashMap<>();
+        cells.put(new TileIndex(0, 0).hashCode(), createCellOfRandomType());
 
         do {
+            insertRandomCell(cells);
+        } while (cells.size() < cellsTotal);
 
-            cell = createCellOfRandomType();
-            if (cell != null) {
-                cell.setTileIndex(tileIndex);
-                cells.put(cell.getTileIndex().hashCode(), cell);
-            }
+        return cells;
+    }
+
+    protected static void insertRandomCell(Map<Integer, Cell> cells) {
+        if (cells.size() > 0) {
             int randomCellIndex = new Random().nextInt(cells.size());
+
             SpecimenComponent randomCell = cells.values().stream()
                     .skip(randomCellIndex)
                     .findFirst()
                     .get();
-            tileIndex = getRandomTileIndexNearbyTo(randomCell.getTileIndex());
 
-        } while (cells.size() != cellsTotal);
-
-        return cells;
+            TileIndex tileIndex = getRandomTileIndexNearbyTo(randomCell.getTileIndex());
+            Cell cell = createCellOfRandomType();
+            cell.setTileIndex(tileIndex);
+            cells.put(cell.hashCode(), cell);
+        }
     }
 
     protected static Cell createCellOfRandomType() {
@@ -51,7 +53,7 @@ public class CellsBuilder {
         }
 
         if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomCellType
-                && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION + NEURON_PORTION) {
+                && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION + NEURON_PORTION + 0.1f) {
             cell = new Neuron(new Random().nextFloat());
         }
 
