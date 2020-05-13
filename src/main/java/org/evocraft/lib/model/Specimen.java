@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 public class Specimen implements Actionable {

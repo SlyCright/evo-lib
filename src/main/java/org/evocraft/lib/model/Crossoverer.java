@@ -1,8 +1,5 @@
 package org.evocraft.lib.model;
 
-import sun.security.krb5.SCDynamicStoreConfig;
-
-import java.net.CookieHandler;
 import java.util.*;
 
 public class Crossoverer {
@@ -54,14 +51,8 @@ public class Crossoverer {
         List<Connection> parentsConnections = new ArrayList<>();
 
         for (Specimen parent : parents) {
-
-            for (Cell cell : parent.getCells().values()) {
-                parentsCells.add(cell);
-            }
-
-            for (Connection connection : parent.getConnections().values()) {
-                parentsConnections.add(connection);
-            }
+            parentsCells.addAll(parent.getCells().values());
+            parentsConnections.addAll(parent.getConnections().values());
         }
 
         Map<Integer, Cell> offspringCells = mapOffspringCells(parentsCells);
@@ -73,6 +64,7 @@ public class Crossoverer {
     private static Map<Integer, Cell> mapOffspringCells(List<Cell> parentsCells) {
         Map<Integer, ArrayList<Cell>> mappedParentsCells = mapParentsCells(parentsCells);
         Map<Integer, Cell> offspringCells = mapOffspringCells(mappedParentsCells);
+        Mutator.mutate(offspringCells);
         return offspringCells;
     }
 
