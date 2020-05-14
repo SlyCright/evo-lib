@@ -1,18 +1,21 @@
 package org.evocraft.lib.model;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
 public class Mutator {
 
-    private static final float DELETION_CHANCE = 0.003f;
+    private static final float DELETION_CHANCE = 0.00003f;
     private static final float ADDITION_CHANCE = 0.05f;
 
     public static void mutateCells(Map<Integer, Cell> cells) {
 
-        for (Integer key : cells.keySet()) {
+        Iterator<Integer> iterator = cells.keySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
             if (new Random().nextFloat() < DELETION_CHANCE) {
-                cells.remove(key);
+                iterator.remove();
             }
         }
 
@@ -24,9 +27,11 @@ public class Mutator {
 
     public static void mutateConnections(Map<Integer, Connection> connections, Map<Integer, Cell> cells) {
 
-        for (Integer key : connections.keySet()) {
+        Iterator<Integer> iterator = connections.keySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
             if (new Random().nextFloat() < DELETION_CHANCE) {
-                connections.remove(key);
+                iterator.remove();
             }
         }
 
@@ -34,4 +39,5 @@ public class Mutator {
             ConnectionBuilder.insertRandomConnection(connections, cells);
         }
     }
+
 }

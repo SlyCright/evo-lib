@@ -13,6 +13,7 @@ public class Muscle extends Cell {
     private final float diagonalSizeWhenActivated;
 
     private List<Membrane> adjacentMembranes = new ArrayList<>(4);
+    float currentSize = Membrane.LENGTH;
 
     Muscle(float sizeWhenActivated) {
         this.sizeWhenActivated = sizeWhenActivated;
@@ -21,7 +22,7 @@ public class Muscle extends Cell {
 
     public void act() {
         this.isActive = calculateIfActive(inputConnections);
-        float currentSize = this.isActive ? this.sizeWhenActivated : Membrane.LENGTH;
+        this.currentSize = this.isActive ? this.sizeWhenActivated : Membrane.LENGTH;
         applySizeToMembranes(currentSize);
         super.act();
     }

@@ -1,17 +1,17 @@
 package org.evocraft.lib.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class SpecimenBuilder {
 
     final static private int CELLS_TOTAL = 12;
-    final static private int CONNECTIONS_TOTAL = 6;
+    final static private int CONNECTIONS_GENERATE_TIMES = 6;
 
     public static ArrayList<Specimen> generateSpecies(int specimensTotal) {
         ArrayList<Specimen> species = new ArrayList<>(specimensTotal);
@@ -23,7 +23,7 @@ public class SpecimenBuilder {
 
     protected static Specimen generateSpecimen() {
         Map<Integer, Cell> cells = CellsBuilder.generateCells(CELLS_TOTAL);
-        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, CONNECTIONS_TOTAL);
+        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, CONNECTIONS_GENERATE_TIMES);
 
         return createSpecimenOfCellsAndConnections(cells, connections);
     }
@@ -39,29 +39,26 @@ public class SpecimenBuilder {
 
         Specimen specimen = new Specimen();
 
-        insertCellsIntoSpecimen(specimen, cells);
+        specimen.setCells(cells);
+        specimen.setConnections(connections);
+        specimen.setMembranes(membranes);
+        specimen.setNodes(nodes);
+
+        specimen.getComponents().addAll(cells.values());
         insertConnectionsIntoSpecimen(specimen, connections);
-        insertMembranesIntoSpecimen(specimen, membranes);
-        insertNodesIntoSpecimen(specimen, nodes);
+        specimen.getComponents().addAll(membranes.values());
+        specimen.getComponents().addAll(nodes.values());
 
         return specimen;
     }
 
-    private static void insertCellsIntoSpecimen(Specimen specimen, Map<Integer, Cell> cells) {
-
-    }
-
     private static void insertConnectionsIntoSpecimen(Specimen specimen, Map<Integer, Connection> connections) {
-//todo connection valid check: binded cell isn't null
+        specimen.getComponents()
+            .addAll(connections.values().stream()
+                .filter(c -> c.getInput() != null && c.getOutput() != null)
+                .collect(Collectors.toList()));
     }
 
-    private static void insertMembranesIntoSpecimen(Specimen specimen, Map<Integer, Membrane> membranes) {
-
-    }
-
-    private static void insertNodesIntoSpecimen(Specimen specimen, Map<Integer, Node> nodes) {
-
-    }
 }
 
 

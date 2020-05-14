@@ -11,8 +11,15 @@ public class ComponentsBinder {
 
         for (Connection connection : connections.values()) {
 
-            inputTileHash = connection.getInputTileIndex().hashCode();
-            outputTileHash = connection.getOutputTileIndex().hashCode();
+            TileIndex inputTileIndex = connection.getInputTileIndex();
+            TileIndex outputTileIndex = connection.getOutputTileIndex();
+
+            if (inputTileIndex == null || outputTileIndex == null) {
+                break;
+            }
+
+            inputTileHash = inputTileIndex.hashCode();
+            outputTileHash = outputTileIndex.hashCode();
 
             inputCell = cells.get(inputTileHash);
             outputCell = cells.get(outputTileHash);
@@ -27,6 +34,40 @@ public class ComponentsBinder {
 
     public static void bindCellsAndMembranes(Map<Integer, Cell> cells, Map<Integer, Membrane> membranes) {
 
+        for (Cell cell : cells.values()) {
+
+            if (cell instanceof Muscle) {
+                Muscle muscle = (Muscle) cell;
+                TileIndex muscleTileIndex = muscle.getTileIndex();
+                int i = 0, j = 0;
+
+                for (Direction direction : Direction.values()) {
+
+                    switch (direction) {
+                        case UP:
+                            i = muscleTileIndex.i;
+                            j = muscleTileIndex.j - 1;
+                            break;
+                        case RIGHT:
+                            i = muscleTileIndex.i + 1;
+                            j = muscleTileIndex.j;
+                            break;
+                        case DOWN:
+                            i = muscleTileIndex.i;
+                            j = muscleTileIndex.j + 1;
+                            break;
+                        case LEFT:
+                            i = muscleTileIndex.i - 1;
+                            j = muscleTileIndex.j;
+                            break;
+                    }
+
+                    TileIndex adjacentMembraneTileIndex = new TileIndex(i, j);
+                    Membrane adjacentMembrane = membranes.get(adjacentMembraneTileIndex.hashCode());
+                    muscle.getAdjacentMembranes().add(adjacentMembrane);
+                }
+            }
+        }
     }
 
     public static void bindCellsAndNodes(Map<Integer, Cell> cells, Map<Integer, Node> nodes) {
@@ -61,83 +102,58 @@ public class ComponentsBinder {
                 adjacentNode = nodes.get(adjacentNodeTileIndex.hashCode());
                 cell.getAdjacentNodes().add(adjacentNode);
             }
-
         }
     }
 
     public static void bindMembranesAndNodes(Map<Integer, Membrane> membranes, Map<Integer, Node> nodes) {
-        //todo find existing code (former nodes to nodes binding)
-    }
+        TileIndex membraneTileIndex;
+        int i, j;
 
+        for (Membrane membrane : membranes.values()) {
+            membraneTileIndex = membrane.getTileIndex();
 
-    private void bindNodesBetweenNodes(Map<Integer, SpecimenComponent> components) { //todo bugfix: redundant links appears
-        int adjacentNodeI = 0, adjacentNodeJ = 0;
-        TileIndex nodeTileIndex;
-        TileIndex adjacentNodeTileIndex;
-        Node adjacentNode;
-        Node node;
-        int checkCellPresenceOneI = 0, checkCellPresenceOneJ = 0;
-        int checkCellPresenceTwoI = 0, checkCellPresenceTwoJ = 0;
-        TileIndex checkCellPresenceOne, checkCellPresenceTwo;
-        Cell forCheckPresenceOne, forCheckPresenceTwo;
-        for (SpecimenComponent component : components.values()) {
-            if (component instanceof Node) {
-                node = (Node) component;
-                nodeTileIndex = node.getTileIndex();
-                for (Direction direction : Direction.values()) {
+            for (Direction direction : Direction.values()) {
 
-                    switch (direction) {
-                        case UP:
-                            adjacentNodeI = nodeTileIndex.i;
-                            adjacentNodeJ = nodeTileIndex.j - 2;
-                            checkCellPresenceOneI = nodeTileIndex.i - 1;
-                            checkCellPresenceOneJ = nodeTileIndex.i - 1;
-                            checkCellPresenceTwoI = nodeTileIndex.i + 1;
-                            checkCellPresenceTwoJ = nodeTileIndex.i - 1;
-                            break;
-                        case RIGHT:
-                            adjacentNodeI = nodeTileIndex.i + 2;
-                            adjacentNodeJ = nodeTileIndex.j;
-                            checkCellPresenceOneI = nodeTileIndex.i + 1;
-                            checkCellPresenceOneJ = nodeTileIndex.i - 1;
-                            checkCellPresenceTwoI = nodeTileIndex.i + 1;
-                            checkCellPresenceTwoJ = nodeTileIndex.i + 1;
-                            break;
-                        case DOWN:
-                            adjacentNodeI = nodeTileIndex.i;
-                            adjacentNodeJ = nodeTileIndex.j + 2;
-                            checkCellPresenceOneI = nodeTileIndex.i + 1;
-                            checkCellPresenceOneJ = nodeTileIndex.i + 1;
-                            checkCellPresenceTwoI = nodeTileIndex.i - 1;
-                            checkCellPresenceTwoJ = nodeTileIndex.i + 1;
-                            break;
-                        case LEFT:
-                            adjacentNodeI = nodeTileIndex.i - 2;
-                            adjacentNodeJ = nodeTileIndex.j;
-                            checkCellPresenceOneI = nodeTileIndex.i - 1;
-                            checkCellPresenceOneJ = nodeTileIndex.i + 1;
-                            checkCellPresenceTwoI = nodeTileIndex.i - 1;
-                            checkCellPresenceTwoJ = nodeTileIndex.i - 1;
-                            break;
-                    }
-
-                    adjacentNodeTileIndex = new TileIndex(adjacentNodeI, adjacentNodeJ);
-                    adjacentNode = (Node) components.get(adjacentNodeTileIndex.hashCode());
-
-                    if (adjacentNode != null) {
-                        checkCellPresenceOne = new TileIndex(checkCellPresenceOneI, checkCellPresenceOneJ);
-                        forCheckPresenceOne = (Cell) components.get(checkCellPresenceOne.hashCode());
-                        checkCellPresenceTwo = new TileIndex(checkCellPresenceTwoI, checkCellPresenceTwoJ);
-                        forCheckPresenceTwo = (Cell) components.get(checkCellPresenceTwo.hashCode());
-
-                        if (forCheckPresenceOne != null || forCheckPresenceTwo != null) {
-                            // node.getAdjacentMembranes().add( adjacentNode);
-                        }
-                    }
+                switch (direction) {
+                    case UP:
+                        i = membraneTileIndex.i;
+                        j = membraneTileIndex.j - 1;
+                        setInitialNodeInMembrane(i, j, membrane, nodes);
+                        break;
+                    case RIGHT:
+                        i = membraneTileIndex.i + 1;
+                        j = membraneTileIndex.j;
+                        setTerminalNodeInMembrane(i, j, membrane, nodes);
+                        break;
+                    case DOWN:
+                        i = membraneTileIndex.i;
+                        j = membraneTileIndex.j + 1;
+                        setTerminalNodeInMembrane(i, j, membrane, nodes);
+                        break;
+                    case LEFT:
+                        i = membraneTileIndex.i - 1;
+                        j = membraneTileIndex.j;
+                        setInitialNodeInMembrane(i, j, membrane, nodes);
+                        break;
                 }
             }
         }
     }
 
+    protected static void setInitialNodeInMembrane(int i, int j, Membrane membrane, Map<Integer, Node> nodes) { //todo refactor: too much params
+        TileIndex nodeTileIndex = new TileIndex(i, j);
+        Node node = nodes.get(nodeTileIndex.hashCode());
+        if (node != null) {
+            membrane.setInitialNode(node);
+        }
+    }
+
+    protected static void setTerminalNodeInMembrane(int i, int j, Membrane membrane, Map<Integer, Node> nodes) { //todo refactor: too much params
+        TileIndex nodeTileIndex = new TileIndex(i, j);
+        Node node = nodes.get(nodeTileIndex.hashCode());
+        if (node != null) {
+            membrane.setTerminalNode(node);
+        }
+    }
 
 }

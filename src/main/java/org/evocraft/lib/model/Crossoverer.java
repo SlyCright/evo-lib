@@ -101,7 +101,7 @@ public class Crossoverer {
             float randomFloat = new Random().nextFloat() * (float) SEXES_TOTAL;
             long randomIndex = Math.round(Math.floor(randomFloat));
             List<SpecimenComponent> parentsComponents = mappedParentsComponents.get(key);
-            if (randomIndex <= parentsComponents.size()) {
+            if (randomIndex < parentsComponents.size()) {
                 SpecimenComponent parentComponent = parentsComponents.get((int) randomIndex);
                 SpecimenComponent offspringComponent = parentComponent.copy();
                 offspringComponents.add(offspringComponent);

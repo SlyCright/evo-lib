@@ -1,11 +1,10 @@
 package org.evocraft.lib.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Setter
 @Getter
@@ -24,7 +23,7 @@ public class Membrane extends SpecimenComponent {
         this.membrane = calculateMembraneVector();
         float shouldBeLength = calculateShouldBeLength();
         float currentLength = this.membrane.mag();
-        float force = STIFFNESS * (currentLength - shouldBeLength);
+        float force = - STIFFNESS * (currentLength - shouldBeLength);
         applyForceToAdjacentNode(-force, initialNode);
         applyForceToAdjacentNode(force, terminalNode);
     }

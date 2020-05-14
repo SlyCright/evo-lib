@@ -3,7 +3,6 @@ package org.evocraft.lib.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -22,8 +21,16 @@ public class World implements Actionable {
 
     public World() {
         species = SpecimenBuilder.generateSpecies(SPECIMENS_TOTAL);
+        moveSpeciesToInitialPosition(species, initialPositionOfSpecimens);
     }
 
+    private void moveSpeciesToInitialPosition(ArrayList<Specimen> species, PVector initialPositionOfSpecimens) {
+        for (Specimen specimen : species) {
+            for (Node node : specimen.getNodes().values()) {
+                node.getPosition().add(initialPositionOfSpecimens);
+            }
+        }
+    }
 
     @Override
     public void act() {
@@ -32,15 +39,14 @@ public class World implements Actionable {
 
         if (epochTicker.isEpochEnded()) {
             species = createNextGenerationOf(species);
+            moveSpeciesToInitialPosition(species, initialPositionOfSpecimens);
             epochTicker.restartEpoch();
         }
     }
 
     private ArrayList<Specimen> createNextGenerationOf(ArrayList<Specimen> ancestors) {
         sortByFitness(ancestors);
-        ArrayList<Specimen> offsprings = Crossoverer.crossOverBestFittedOf(ancestors);
-        mutate(offsprings);
-        return offsprings;
+        return Crossoverer.crossOverBestFittedOf(ancestors);
     }
 
     private void sortByFitness(List<Specimen> species) {
@@ -61,11 +67,6 @@ public class World implements Actionable {
         PVector initialPosition = this.initialPositionOfSpecimens.copy();
         float fitness = PVector.dist(specimenPosition, initialPosition);
         return fitness;
-    }
-
-
-    private void mutate(List<Specimen> offsprings) {
-        //todo some code here
     }
 
     private void calculateNextTickFor(List<Specimen> species) {

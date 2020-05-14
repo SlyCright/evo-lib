@@ -2,7 +2,7 @@ import org.evocraft.lib.model.*; //<>//
 
 World world=new World();
 ArrayList<Specimen> species=world.getSpecies();
-    ArrayList<SpecimenComponent> components;
+ArrayList<SpecimenComponent> components;
 
 int wdth=999;
 int hght=666;
@@ -19,15 +19,15 @@ void draw() {
   background(75);
 
   world.act();
-  
-species=world.getSpecies();
-  
+
+  species=world.getSpecies();
+
   for (Specimen specimen : species) {
 
     components=specimen.getComponents();
 
     for (SpecimenComponent component : components) {
-      
+
       if (component instanceof Cell) {
         Cell cell=(Cell)component;
         PVector position=cell.getPosition();
@@ -62,7 +62,7 @@ species=world.getSpecies();
           } else {
             stroke(125, 0, 0);
           }
-          strokeWeight(muscle.getSize()); //muscle.getSize()
+          strokeWeight(muscle.getCurrentSize()); //muscle.getSize()
         } 
 
         ellipse(position.x, position.y, 2f, 2f);
@@ -70,20 +70,22 @@ species=world.getSpecies();
     }
 
     for (SpecimenComponent component : components) {
+
       if (component instanceof Node) {
         Node node=(Node)component;
         PVector position=node.getPosition();
-
-        for (Node nearbyNode : node.getAdjacentNodes()) {
-
-          stroke(0);
-          strokeWeight(1f);
-          line(node.getPosition().x, node.getPosition().y, nearbyNode.getPosition().x, nearbyNode.getPosition().y);
-        } 
-
         stroke(0);
         strokeWeight(1f);
         ellipse(position.x, position.y, 5f, 5f);
+      }
+
+      if (component instanceof Membrane) {
+        Membrane membrane=(Membrane)component;
+        Node node=membrane.getInitialNode();
+        Node nearbyNode=membrane.getTerminalNode();
+        stroke(0);
+        strokeWeight(1f);
+        line(node.getPosition().x, node.getPosition().y, nearbyNode.getPosition().x, nearbyNode.getPosition().y);
       }
     }
 
