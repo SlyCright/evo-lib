@@ -1,8 +1,10 @@
 package org.evocraft.lib.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,7 @@ import lombok.Setter;
 public class SpecimenBuilder {
 
     final static private int CELLS_TOTAL = 12;
-    final static private int CONNECTIONS_GENERATE_TIMES = 6;
+    final static private int CONNECTIONS_GENERATE_TIMES = 120;
 
     public static ArrayList<Specimen> generateSpecies(int specimensTotal) {
         ArrayList<Specimen> species = new ArrayList<>(specimensTotal);
@@ -54,9 +56,9 @@ public class SpecimenBuilder {
 
     private static void insertConnectionsIntoSpecimen(Specimen specimen, Map<Integer, Connection> connections) {
         specimen.getComponents()
-            .addAll(connections.values().stream()
-                .filter(c -> c.getInput() != null && c.getOutput() != null)
-                .collect(Collectors.toList()));
+                .addAll(connections.values().stream()
+                        .filter(c -> c.getInput() != null && c.getOutput() != null)
+                        .collect(Collectors.toList()));
     }
 
 }

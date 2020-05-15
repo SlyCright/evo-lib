@@ -32,10 +32,8 @@ public class Membrane extends SpecimenComponent {
         float shouldBeLength = 0f;
 
         switch (appliedLengths.size()) {
-
             case 0:
                 return LENGTH;
-
             case 1:
                 shouldBeLength += LENGTH;
                 shouldBeLength += appliedLengths.values().stream()
@@ -43,7 +41,6 @@ public class Membrane extends SpecimenComponent {
                         .get();
                 shouldBeLength /= 2;
                 return shouldBeLength;
-
             default:
                 for (Float length : appliedLengths.values()) {
                     shouldBeLength += length;

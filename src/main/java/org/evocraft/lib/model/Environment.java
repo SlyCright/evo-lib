@@ -2,6 +2,8 @@ package org.evocraft.lib.model;
 
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 public class Environment implements Actionable {
 
     final static private float DRAG_FRICTION_FACTOR = 0.05f;
@@ -10,6 +12,17 @@ public class Environment implements Actionable {
     public void act() {
         //todo backclog: some codeHere
     }
+
+    public static void interactWith(ArrayList<Specimen> species) {
+        applyDragForce(species);
+    }
+
+    private static void applyDragForce(ArrayList<Specimen> species) {
+        species.stream()
+                .flatMap(s -> s.getNodes().values().stream())
+                .forEach(Environment::applyDragForce);
+    }
+
 
     public static void applyDragForce(Node node) {
         PVector nodeVelocity = node.getVelocity().copy();

@@ -11,7 +11,7 @@ import processing.core.PVector;
 @Setter
 public class World implements Actionable {
 
-    private final int SPECIMENS_TOTAL = 12;
+    public static final int SPECIMENS_TOTAL = 12;
     private final int EPOCH_LASTING_TICKS = 1_000;
     private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
 
@@ -34,6 +34,7 @@ public class World implements Actionable {
 
     @Override
     public void act() {
+        Environment.interactWith(species);
         calculateNextTickFor(species);
         epochTicker.act();
 
@@ -44,12 +45,12 @@ public class World implements Actionable {
         }
     }
 
-    private ArrayList<Specimen> createNextGenerationOf(ArrayList<Specimen> ancestors) {
+    protected ArrayList<Specimen> createNextGenerationOf(ArrayList<Specimen> ancestors) {
         sortByFitness(ancestors);
         return Crossoverer.crossOverBestFittedOf(ancestors);
     }
 
-    private void sortByFitness(List<Specimen> species) {
+    protected void sortByFitness(List<Specimen> species) {
 
         Comparator<Specimen> specimenComparator = (s1, s2) -> {
 
@@ -65,8 +66,7 @@ public class World implements Actionable {
     private float calculateFitnessOf(Specimen specimen) {
         PVector specimenPosition = specimen.calculatePosition().copy();
         PVector initialPosition = this.initialPositionOfSpecimens.copy();
-        float fitness = PVector.dist(specimenPosition, initialPosition);
-        return fitness;
+        return PVector.dist(specimenPosition, initialPosition);
     }
 
     private void calculateNextTickFor(List<Specimen> species) {

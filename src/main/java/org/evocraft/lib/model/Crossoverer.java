@@ -50,7 +50,7 @@ public class Crossoverer {
         return randomSpecimen;
     }
 
-    public static Specimen buildOffspringOf(List<Specimen> parents) {
+    protected static Specimen buildOffspringOf(List<Specimen> parents) {
         List<SpecimenComponent> parentsComponents = new ArrayList<>(); //todo refactor: use List<Copyable> instead of List<SpecimenComponent>
 
         for (Specimen parent : parents) {
@@ -71,8 +71,7 @@ public class Crossoverer {
 
     protected static List<SpecimenComponent> generateOffspringComponents(List<SpecimenComponent> parentsComponents) {
         Map<Integer, List<SpecimenComponent>> mappedParentsComponents = mapParentsComponents(parentsComponents);
-        List<SpecimenComponent> offspringComponents = listOffspringComponents(mappedParentsComponents);
-        return offspringComponents;
+        return listOffspringComponents(mappedParentsComponents);
     }
 
     protected static Map<Integer, List<SpecimenComponent>> mapParentsComponents(List<SpecimenComponent> parentsComponents) {

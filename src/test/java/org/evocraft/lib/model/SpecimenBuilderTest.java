@@ -43,4 +43,21 @@ class SpecimenBuilderTest {
     void generateSpecimen() {
         assertNotNull(SpecimenBuilder.generateSpecimen());
     }
+
+    @Test
+    void createSpecimenOfCellsAndConnections() {
+        Map<Integer, Cell> cells=CellsBuilder.generateCells(12);
+        Map<Integer, Connection> connections=ConnectionBuilder.generateConnections(cells,120);
+
+        Specimen specimen=SpecimenBuilder.createSpecimenOfCellsAndConnections(cells,connections);
+
+        Connection notNullConnection=null;
+        for (SpecimenComponent component : specimen.getComponents()) {
+            if(component instanceof Connection){
+                notNullConnection= (Connection) component;
+            }
+        }
+        assertNotNull(notNullConnection);
+
+    }
 }
