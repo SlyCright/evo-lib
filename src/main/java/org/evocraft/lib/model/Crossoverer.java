@@ -9,7 +9,7 @@ import java.util.Random;
 public class Crossoverer {
 
     private static final float SPECIMENS_PORTION_WHICH_BECOMES_ANCESTOR = 1f / 3f;
-    private static final int SEXES_TOTAL = 2;
+    public static final int SEXES_TOTAL = 2;
 
     public static ArrayList<Specimen> crossOverBestFittedOf(ArrayList<Specimen> ancestors) {
         int offspringsTotal = ancestors.size();
@@ -60,8 +60,9 @@ public class Crossoverer {
 
         List<SpecimenComponent> offSpringComponents = generateOffspringComponents(parentsComponents);
 
-        Map<Integer, Cell> offspringCells = mapOffspringCells(offSpringComponents);
-        Map<Integer, Connection> offSpringConnections = mapOffspringConnections(offSpringComponents);
+        Map<Integer, Cell> offspringCells = mapCellsFromComponentList(offSpringComponents);
+
+        Map<Integer, Connection> offSpringConnections = mapConnectionsFromComponentList(offSpringComponents);
 
         Mutator.mutateCells(offspringCells);
         Mutator.mutateConnections(offSpringConnections, offspringCells);
@@ -110,26 +111,28 @@ public class Crossoverer {
         return offspringComponents;
     }
 
-    protected static Map<Integer, Cell> mapOffspringCells(List<SpecimenComponent> offSpringComponents) {
-        Map<Integer, Cell> offspringCells = new HashMap<>();
+    protected static Map<Integer, Cell> mapCellsFromComponentList(List<SpecimenComponent> offSpringComponents) { //todo refactor: use stream here
+        Map<Integer, Cell> mappedCells = new HashMap<>();
         for (SpecimenComponent component : offSpringComponents) {
             if (component instanceof Cell) {
                 Cell cell = (Cell) component;
-                offspringCells.put(cell.hashCode(), cell);
+                mappedCells.put(cell.hashCode(), cell);
             }
         }
-        return offspringCells;
+        return mappedCells;
     }
 
-    protected static Map<Integer, Connection> mapOffspringConnections(List<SpecimenComponent> offSpringComponents) {
-        Map<Integer, Connection> offspringConnections = new HashMap<>();
-        for (SpecimenComponent component : offSpringComponents) {
+    protected static Map<Integer, Connection> mapConnectionsFromComponentList(List<SpecimenComponent> listedComponents) { //todo refactor: use stream here
+        Map<Integer, Connection> mappedConnections = new HashMap<>();
+
+        for (SpecimenComponent component : listedComponents) {
             if (component instanceof Connection) {
                 Connection connection = (Connection) component;
-                offspringConnections.put(connection.hashCode(), connection);
+                mappedConnections.put(connection.hashCode(), connection);
             }
         }
-        return offspringConnections;
+
+        return mappedConnections;
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Mutator {
 
-    private static final float DELETION_CHANCE = 0.00003f;
+    private static final float DELETION_CHANCE = 0.0005f;
     private static final float ADDITION_CHANCE = 0.05f;
 
     public static void mutateCells(Map<Integer, Cell> cells) {

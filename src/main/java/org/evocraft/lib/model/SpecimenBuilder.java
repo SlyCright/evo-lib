@@ -13,7 +13,7 @@ import lombok.Setter;
 public class SpecimenBuilder {
 
     final static private int CELLS_TOTAL = 12;
-    final static private int CONNECTIONS_GENERATE_TIMES = 120;
+    final static private int CONNECTIONS_GENERATE_TIMES = 24;
 
     public static ArrayList<Specimen> generateSpecies(int specimensTotal) {
         ArrayList<Specimen> species = new ArrayList<>(specimensTotal);
