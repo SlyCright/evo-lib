@@ -1,10 +1,9 @@
 package org.evocraft.lib.model;
 
-import processing.core.PVector;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import processing.core.PVector;
 
 public class NodesBuilder {
 
@@ -60,7 +59,7 @@ public class NodesBuilder {
 
     private static void setEuclidPositionsToNodes(Map<Integer, Node> nodes, Map<Integer, Cell> cells) {
         int i, j;
-        float posX, posY;
+        float posX = 0f, posY = 0f;
         Node node;
         TileIndex tileIndex;
         for (SpecimenComponent component : nodes.values()) {

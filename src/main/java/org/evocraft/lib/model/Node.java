@@ -1,8 +1,5 @@
 package org.evocraft.lib.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -11,9 +8,9 @@ import processing.core.PVector;
 @Setter
 public class Node extends SpecimenComponent {
 
-    private PVector position= new PVector(0.0f, 0.0f);
-    private PVector velocity = new PVector(0.0f, 0.0f);
     private PVector acceleration = new PVector(0.0f, 0.0f);
+    private PVector velocity = new PVector(0.0f, 0.0f);
+    private PVector position= new PVector(0.0f, 0.0f);
 
     @Override
     public void act() {

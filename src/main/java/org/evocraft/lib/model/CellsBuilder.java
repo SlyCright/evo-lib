@@ -14,9 +14,9 @@ public class CellsBuilder {
         Map<Integer, Cell> cells = new HashMap<>();
         cells.put(new TileIndex(0, 0).hashCode(), createCellOfRandomType());
 
-        do {
+        while (cells.size() < cellsTotal) {
             insertRandomCell(cells);
-        } while (cells.size() < cellsTotal);
+        };
 
         return cells;
     }

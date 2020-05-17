@@ -1,10 +1,8 @@
 package org.evocraft.lib.model;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +22,12 @@ public class SpecimenBuilder {
     }
 
     protected static Specimen generateSpecimen() {
-        Map<Integer, Cell> cells = CellsBuilder.generateCells(CELLS_TOTAL);
-        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, CONNECTIONS_GENERATE_TIMES);
+        return generateSpecimen(CELLS_TOTAL, CONNECTIONS_GENERATE_TIMES);
+    }
+
+    protected static Specimen generateSpecimen(int cellsTotal, int connectionsGenerateTimes) {
+        Map<Integer, Cell> cells = CellsBuilder.generateCells(cellsTotal);
+        Map<Integer, Connection> connections = ConnectionBuilder.generateConnections(cells, connectionsGenerateTimes);
 
         return createSpecimenOfCellsAndConnections(cells, connections);
     }
@@ -58,9 +60,9 @@ public class SpecimenBuilder {
 
     private static void insertConnectionsIntoSpecimen(Specimen specimen, Map<Integer, Connection> connections) {
         specimen.getComponents()
-                .addAll(connections.values().stream()
-                        .filter(c -> c.getInput() != null && c.getOutput() != null)
-                        .collect(Collectors.toList()));
+            .addAll(connections.values().stream()
+                .filter(c -> c.getInput() != null && c.getOutput() != null)
+                .collect(Collectors.toList()));
     }
 
 }

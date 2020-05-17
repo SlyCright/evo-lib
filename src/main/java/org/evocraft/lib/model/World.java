@@ -3,7 +3,6 @@ package org.evocraft.lib.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -40,6 +39,7 @@ public class World implements Actionable {
     public void act() {
         Environment.interactWith(species);
         calculateNextTickFor(species);
+
         epochTicker.act();
 
         if (epochTicker.isEpochEnded()) {
