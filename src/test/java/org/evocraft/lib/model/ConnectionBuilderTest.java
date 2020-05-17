@@ -49,8 +49,8 @@ class ConnectionBuilderTest {
         cellsTotal = 3;
 
         cells = CellsBuilder.generateCells(cellsTotal);
-        Connection connectionOne = new Connection(0f);
-        Connection connectionTwo = new Connection(0f);
+        Connection connectionOne = new Connection(0f,false);
+        Connection connectionTwo = new Connection(0f,false);
         for (int i = 0; i < 100; i++) {
             Cell inputCellOne = ConnectionBuilder.getRandomCellOf(cells);
             Cell outputCellOne = ConnectionBuilder.getRandomCellOf(cells);

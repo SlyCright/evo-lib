@@ -18,7 +18,8 @@ public class ConnectionBuilder {
 
     protected static void insertRandomConnection(Map<Integer, Connection> connections, Map<Integer, Cell> cells) {
         float randomWeight = new Random().nextFloat();
-        Connection connection = new Connection(randomWeight);
+        boolean randomIfReverseSignal=new Random().nextBoolean();
+        Connection connection = new Connection(randomWeight,randomIfReverseSignal);
         Cell inputCell;
         Cell outPutCell;
 

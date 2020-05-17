@@ -22,6 +22,7 @@ public class Specimen implements Actionable {
 
     private ArrayList<SpecimenComponent> components = new ArrayList<>();
 
+    private PVector position;
     private PVector positionOnCreation;
 
     @Override
@@ -38,6 +39,7 @@ public class Specimen implements Actionable {
         }
         int nodesTotal = this.nodes.size();
         position.div((float) nodesTotal);
+        this.position = position.copy();
         return position;
     }
 }

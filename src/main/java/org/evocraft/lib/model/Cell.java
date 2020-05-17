@@ -2,6 +2,7 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -20,6 +21,7 @@ public abstract class Cell extends SpecimenComponent {
 
     protected List<Connection> inputConnections = new ArrayList<>();
     protected List<Connection> outputConnections = new ArrayList<>();
+
 
     @Override
     public void act() {

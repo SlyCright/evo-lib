@@ -2,6 +2,7 @@ package org.evocraft.lib.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +16,10 @@ public class Muscle extends Cell {
     private List<Membrane> adjacentMembranes = new ArrayList<>(4);
     float currentSize = Membrane.LENGTH;
 
-    Muscle(float sizeWhenActivated) {
+    Muscle(float sizeWhenActivated, boolean doesReverseSignal) {
         this.sizeWhenActivated = sizeWhenActivated;
         this.diagonalSizeWhenActivated = (float) Math.sqrt(2.0) * sizeWhenActivated;
+        super.doesReverseSignal = doesReverseSignal;
     }
 
     public void act() {
@@ -42,6 +44,10 @@ public class Muscle extends Cell {
                 isActive = true;
                 break;
             }
+        }
+
+        if (doesReverseSignal) {
+            isActive = !isActive;
         }
 
         return isActive;

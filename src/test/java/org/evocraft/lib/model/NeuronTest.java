@@ -11,7 +11,7 @@ class NeuronTest {
     @RepeatedTest(10)
     void calculateIfActive() {
         Float threshold = new Random().nextFloat();
-        Neuron neuron = new Neuron(threshold);
+        Neuron neuron = new Neuron(threshold,false);
         ArrayList<Connection> connections = new ArrayList<>();
         int connectionsTotal = new Random().nextInt(100);
         float sumWeight = 0f;
@@ -19,11 +19,11 @@ class NeuronTest {
         for (int i = 0; i < connectionsTotal; i++) {
             float weight = new Random().nextFloat();
             sumWeight += weight;
-            connections.add(new Connection(weight));
+            connections.add(new Connection(weight,false));
         }
 
         for (Connection connection : connections) {
-            Cell cell = new Muscle(50f);
+            Cell cell = new Muscle(50f,false);
             cell.setActive(true);
             connection.setInput(cell);
         }

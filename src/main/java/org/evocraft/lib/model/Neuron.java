@@ -1,6 +1,7 @@
 package org.evocraft.lib.model;
 
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +12,9 @@ public class Neuron extends Cell {
 
     private final float threshold;
 
-    public Neuron(float threshold) {
+    public Neuron(float threshold, boolean doesReverseSignal) {
         this.threshold = threshold;
+        super.doesReverseSignal = doesReverseSignal;
     }
 
     @Override
@@ -20,7 +22,6 @@ public class Neuron extends Cell {
         isActive = calculateIfActive(inputConnections);
         super.act();
     }
-
 
     protected boolean calculateIfActive(List<Connection> inputConnections) { //todo backlog: depends of DNA here should be other types pf signal calculations. Like sigmoid function or something
         float signal = 0f;
@@ -30,6 +31,10 @@ public class Neuron extends Cell {
         signal /= inputConnections.size();
 
         boolean isActive = signal > threshold;
+
+        if (doesReverseSignal) {
+            isActive = !isActive;
+        }
 
         return isActive;
     }

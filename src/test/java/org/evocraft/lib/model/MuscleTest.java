@@ -8,18 +8,18 @@ class MuscleTest {
 
     @Test
     void act() {
-        new Muscle(1f).act();
+        new Muscle(1f,false).act();
     }
 
     @Test
     void applySizeToMembranes() {
-        new Muscle(0.5f).applySizeToMembranes(1f);
+        new Muscle(0.5f,false).applySizeToMembranes(1f);
     }
 
     @Test
     void calculateIfActive() {
-        Muscle muscle = new Muscle(0.5f);
-        Connection connection = new Connection(0.5f);
+        Muscle muscle = new Muscle(0.5f,false);
+        Connection connection = new Connection(0.5f,false);
         muscle.getInputConnections().add(connection);
 
         connection.setActive(true);

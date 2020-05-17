@@ -34,7 +34,7 @@ class NodesBuilderTest {
     void createNodesWithZeroPosition() {
         Map<Integer, Cell> cells = new HashMap<>();
         TileIndex tileIndex = new TileIndex(0, 0);
-        Muscle cell = new Muscle(0f);
+        Muscle cell = new Muscle(0f,false);
         cell.setTileIndex(tileIndex);
         cells.put(tileIndex.hashCode(), cell);
         Map<Integer, Node> nodes = NodesBuilder.generateNodes(cells);
@@ -44,7 +44,7 @@ class NodesBuilderTest {
 
         for (int i = 0; i < 3; i++) {
             tileIndex = new TileIndex(i*2, i*2);
-            cell = new Muscle(0f);
+            cell = new Muscle(0f,false);
             cell.setTileIndex(tileIndex);
             cells.put(tileIndex.hashCode(), cell);
         }

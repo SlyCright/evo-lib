@@ -14,7 +14,7 @@ void settings() {
 void setup() {
   // frameRate(10);
   thread("simulation");
-  int sleepTime=2;
+  int sleepTime=1;
   Specimen firstBest;
 
   do {
@@ -30,7 +30,7 @@ void setup() {
   } while (firstBest==null);
 }
 
-int tickCounter=0;
+int tickCounter=1001;
 
 void mousePressed() {
   tickCounter=1001;
@@ -44,12 +44,13 @@ void draw() {
     tickCounter=0;
     species.clear();
     species.add(world.getBestSpecimen());
-    new World().moveSpeciesToInitialPosition(species, new PVector(0f, 0f));
+    new World().moveSpeciesToInitialPosition(species, new PVector(-500f, -500f));
   }
 
   for (Specimen specimen : species) {
 
     specimen.act();
+    Environment.interactWith(species);
 
     components=specimen.getComponents();
 

@@ -72,7 +72,7 @@ class CellsBuilderTest {
 
         while (true) {
             TileIndex tileIndex = new TileIndex(i, j);
-            Muscle muscle = new Muscle(0f);
+            Muscle muscle = new Muscle(0f, false);
             muscle.setTileIndex(tileIndex);
             for (Cell value : cells.values()) {
                 if (value.hashCode() == muscle.hashCode()) {
@@ -115,7 +115,7 @@ class CellsBuilderTest {
                     iStep = 0;
                     jStep = -2;
 
-                    Cell cell = new Muscle(0f);
+                    Cell cell = new Muscle(0f, false);
                     cell.setTileIndex(new TileIndex(0, 0));
                     cells.put(cell.hashCode(), cell);
                 }

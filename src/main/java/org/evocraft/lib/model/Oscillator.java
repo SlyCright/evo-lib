@@ -7,17 +7,26 @@ import lombok.Setter;
 @Setter
 public class Oscillator extends Cell { //todo backlog: add some more types of oscillator: with signal of low of sin, for example, or Aperiodic
 
-    private final int ACTIVATION_PERIOD_TICKS;
-    private int currentTick = 0;
+    private final int activationPeriodInTicks;
+    private int currentTick;
+    private float periodStartShift;
 
-    Oscillator(int activationPeriodTicks) {
-        this.ACTIVATION_PERIOD_TICKS = activationPeriodTicks;
+    Oscillator(int activationPeriodInTicks, float periodStartShift, boolean doesReverseSignal) {
+        super.doesReverseSignal = doesReverseSignal;
+        this.activationPeriodInTicks = activationPeriodInTicks;
+        this.periodStartShift=periodStartShift;
+
+        currentTick = Math.round((float) activationPeriodInTicks * periodStartShift);
+
+        if (doesReverseSignal) {
+            isActive = !isActive;
+        }
     }
 
     public void act() {
         currentTick++;
 
-        if (currentTick > ACTIVATION_PERIOD_TICKS) {
+        if (currentTick > activationPeriodInTicks) {
             isActive = !isActive;
             currentTick = 0;
         }

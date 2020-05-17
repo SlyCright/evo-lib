@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 public abstract class SpecimenComponent implements Actionable {
 
+    protected TileIndex tileIndex=new TileIndex(0,0); //todo refactor: not all inheritances uses this field
+    protected boolean doesReverseSignal=false; //todo refactor: not all inheritances uses this field
     protected boolean isActive = false; //todo refactor: not all inheritances uses this field
-    protected TileIndex tileIndex = new TileIndex(0, 0); //todo refactor: not all inheritances uses this field
 
     // todo refactor: make constructor SpecimenComponent(TileIndex tileIndex), make field TileIndex final
 

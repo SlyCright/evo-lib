@@ -16,7 +16,8 @@ public class CellsBuilder {
 
         while (cells.size() < cellsTotal) {
             insertRandomCell(cells);
-        };
+        }
+        ;
 
         return cells;
     }
@@ -44,17 +45,24 @@ public class CellsBuilder {
 
         if (0f < randomCellType
                 && randomCellType < MUSCLES_PORTION) {
-            cell = new Muscle(Membrane.LENGTH * (1.5f - new Random().nextFloat())); //todo refactor: make hardcoded value as constant
+            cell = new Muscle(
+                    Membrane.LENGTH * (1.5f - new Random().nextFloat()),
+                    new Random().nextBoolean()); //todo refactor: make hardcoded value as constant
         }
 
         if (MUSCLES_PORTION < randomCellType
                 && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION) {
-            cell = new Oscillator(new Random().nextInt(150)); //todo refactor: make hardcoded value as constant
+            cell = new Oscillator(
+                    25 + new Random().nextInt(150),
+                    new Random().nextFloat(),
+                    new Random().nextBoolean()); //todo refactor: make hardcoded value as constant
         }
 
         if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomCellType
                 && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION + NEURON_PORTION + 0.1f) {
-            cell = new Neuron(new Random().nextFloat());
+            cell = new Neuron(
+                    new Random().nextFloat(),
+                    new Random().nextBoolean());
         }
 
         return cell;

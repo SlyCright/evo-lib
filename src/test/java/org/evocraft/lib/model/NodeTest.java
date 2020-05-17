@@ -20,7 +20,7 @@ class NodeTest {
         for (int i = 0; i < 10; i++) {
             specimen.act();
             for (Node value : specimen.getNodes().values()) {
-                Environment.applyDragForce(value);
+           //     Environment.applyDragForce(value);
             }
             cell.calculatePosition();
 //            System.out.println("i ============================ " + i);
