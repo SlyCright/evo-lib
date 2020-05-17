@@ -14,18 +14,21 @@ public class ComponentsBinder {
             TileIndex inputTileIndex = connection.getInputTileIndex();
             TileIndex outputTileIndex = connection.getOutputTileIndex();
 
-            if (inputTileIndex == null || outputTileIndex == null) {
-                break;
-            }
-
             inputTileHash = inputTileIndex.hashCode();
             outputTileHash = outputTileIndex.hashCode();
 
             inputCell = cells.get(inputTileHash);
             outputCell = cells.get(outputTileHash);
 
+            if (inputCell == null || outputCell == null) {
+                break;
+            }
+
             connection.setInput(inputCell);
             connection.setOutput(outputCell);
+
+            connection.setInitialPosition(inputCell.getPosition().copy());
+            connection.setTerminalPosition(outputCell.getPosition().copy());
 
             inputCell.getOutputConnections().add(connection);
             outputCell.getInputConnections().add(connection);

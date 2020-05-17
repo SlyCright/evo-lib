@@ -3,6 +3,7 @@ package org.evocraft.lib.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import processing.core.PVector;
@@ -11,7 +12,7 @@ import processing.core.PVector;
 @Setter
 public class World implements Actionable {
 
-    public static final int SPECIMENS_TOTAL = 12;
+    public static final int SPECIMENS_TOTAL = 120;
     private final int EPOCH_LASTING_TICKS = 1_000;
     private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
 
@@ -19,12 +20,14 @@ public class World implements Actionable {
     private EpochTicker epochTicker = new EpochTicker(EPOCH_LASTING_TICKS);
     private PVector initialPositionOfSpecimens = new PVector(INITIAL_X_OF_SPECIMEN, INITIAL_Y_OF_SPECIMEN);
 
+    private volatile Specimen bestSpecimen;
+
     public World() {
         species = SpecimenBuilder.generateSpecies(SPECIMENS_TOTAL);
         moveSpeciesToInitialPosition(species, initialPositionOfSpecimens);
     }
 
-    private void moveSpeciesToInitialPosition(ArrayList<Specimen> species, PVector initialPositionOfSpecimens) {
+    public void moveSpeciesToInitialPosition(ArrayList<Specimen> species, PVector initialPositionOfSpecimens) {
         for (Specimen specimen : species) {
             for (Node node : specimen.getNodes().values()) {
                 node.getPosition().add(initialPositionOfSpecimens);
@@ -47,6 +50,7 @@ public class World implements Actionable {
 
     protected ArrayList<Specimen> createNextGenerationOf(ArrayList<Specimen> ancestors) {
         sortByFitness(ancestors);
+        this.setBestSpecimen(species.get(0));
         return Crossoverer.crossOverBestFittedOf(ancestors);
     }
 
@@ -65,7 +69,7 @@ public class World implements Actionable {
 
     private float calculateFitnessOf(Specimen specimen) {
         PVector specimenPosition = specimen.calculatePosition().copy();
-        PVector initialPosition = this.initialPositionOfSpecimens.copy();
+        PVector initialPosition = specimen.getPositionOnCreation().copy();
         return PVector.dist(specimenPosition, initialPosition);
     }
 

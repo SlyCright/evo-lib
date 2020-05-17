@@ -13,7 +13,7 @@ import lombok.Setter;
 public class SpecimenBuilder {
 
     final static private int CELLS_TOTAL = 12;
-    final static private int CONNECTIONS_GENERATE_TIMES = 24;
+    final static private int CONNECTIONS_GENERATE_TIMES = CELLS_TOTAL * 10;
 
     public static ArrayList<Specimen> generateSpecies(int specimensTotal) {
         ArrayList<Specimen> species = new ArrayList<>(specimensTotal);
@@ -50,6 +50,8 @@ public class SpecimenBuilder {
         insertConnectionsIntoSpecimen(specimen, connections);
         specimen.getComponents().addAll(membranes.values());
         specimen.getComponents().addAll(nodes.values());
+
+        specimen.setPositionOnCreation(specimen.calculatePosition().copy());
 
         return specimen;
     }

@@ -13,16 +13,43 @@ void settings() {
 
 void setup() {
   // frameRate(10);
+  thread("simulation");
+  int sleepTime=2;
+  Specimen firstBest;
+
+  do {
+    firstBest=world.getBestSpecimen();
+    sleepTime*=2; 
+    println("wait for first Best:"+sleepTime);
+
+    try {
+      Thread.currentThread().sleep(sleepTime);
+    }
+    catch(InterruptedException e) {
+    }
+  } while (firstBest==null);
+}
+
+int tickCounter=0;
+
+void mousePressed() {
+  tickCounter=1001;
 }
 
 void draw() {    
   background(75);
 
-  world.act();
-
-  species=world.getSpecies();
+  tickCounter++;
+  if (tickCounter>1000) {
+    tickCounter=0;
+    species.clear();
+    species.add(world.getBestSpecimen());
+    new World().moveSpeciesToInitialPosition(species, new PVector(0f, 0f));
+  }
 
   for (Specimen specimen : species) {
+
+    specimen.act();
 
     components=specimen.getComponents();
 
@@ -106,5 +133,11 @@ void draw() {
         line(initialPosition.x, initialPosition.y, terminalPosition.x, terminalPosition.y);
       }
     }
+  }
+}
+
+void simulation() {
+  while (true) {
+    world.act();
   }
 }

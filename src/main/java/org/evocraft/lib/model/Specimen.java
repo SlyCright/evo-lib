@@ -22,6 +22,8 @@ public class Specimen implements Actionable {
 
     private ArrayList<SpecimenComponent> components = new ArrayList<>();
 
+    private PVector positionOnCreation;
+
     @Override
     public void act() {
         for (SpecimenComponent specimenComponent : this.components) {
