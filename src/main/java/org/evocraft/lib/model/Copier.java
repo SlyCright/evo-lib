@@ -27,6 +27,12 @@ public class Copier {
         return oscillatorCopy;
     }
 
+    public static Fixer copy(Fixer fixer) {
+        Fixer fixerCopy = new Fixer(fixer.isDoesReverseSignal());
+        fixerCopy.setTileIndex(fixer.getTileIndex());
+        return fixerCopy;
+    }
+
     public static Connection copy(Connection connection) {
         Connection connectionCopy = new Connection(
                 connection.getWeight(),

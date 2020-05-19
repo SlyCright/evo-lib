@@ -11,8 +11,7 @@ import processing.core.PVector;
 @Setter
 public class World implements Actionable {
 
-    int deleteme;
-    public static final int SPECIMENS_TOTAL = 120;
+    public static final int SPECIMENS_TOTAL = 300;
     private final int EPOCH_LASTING_TICKS = 1_000;
     private final float INITIAL_X_OF_SPECIMEN = 999f / 2f, INITIAL_Y_OF_SPECIMEN = 666f / 2f;
 

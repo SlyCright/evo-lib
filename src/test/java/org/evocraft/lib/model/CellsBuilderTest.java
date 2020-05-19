@@ -51,6 +51,29 @@ class CellsBuilderTest {
             }
         }
         assertTrue(typeIsOk);
+
+        int muscleCount = 0, oscillatorCount = 0, neuronCount = 0, fixerCount = 0;
+
+        for (int i = 0; i < 10_000; i++) {
+            Cell cell = CellsBuilder.createCellOfRandomType();
+            if (cell instanceof Muscle) {
+                muscleCount++;
+            }
+            if (cell instanceof Oscillator) {
+                oscillatorCount++;
+            }
+            if (cell instanceof Neuron) {
+                neuronCount++;
+            }
+            if (cell instanceof Fixer) {
+                fixerCount++;
+            }
+        }
+
+        System.out.println("muscleCount = " + muscleCount);
+        System.out.println("oscillatorCount = " + oscillatorCount);
+        System.out.println("neuronCount = " + neuronCount);
+        System.out.println("fixerCount = " + fixerCount);
     }
 
     @RepeatedTest(10)

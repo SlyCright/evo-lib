@@ -15,7 +15,7 @@ public class Connection extends SpecimenComponent {
     private PVector initialPosition, terminalPosition;  //todo refactor: it's duplication of data. Delete it and change getting position for connection
     private float weight;
 
-    Connection(float weight, boolean doesReverseSignal) {
+    public Connection(float weight, boolean doesReverseSignal) {
         this.weight = weight;
         super.doesReverseSignal = doesReverseSignal;
     }

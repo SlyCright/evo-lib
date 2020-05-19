@@ -16,7 +16,7 @@ public class Muscle extends Cell {
     private List<Membrane> adjacentMembranes = new ArrayList<>(4);
     float currentSize = Membrane.LENGTH;
 
-    Muscle(float sizeWhenActivated, boolean doesReverseSignal) {
+    public Muscle(float sizeWhenActivated, boolean doesReverseSignal) {
         this.sizeWhenActivated = sizeWhenActivated;
         this.diagonalSizeWhenActivated = (float) Math.sqrt(2.0) * sizeWhenActivated;
         super.doesReverseSignal = doesReverseSignal;

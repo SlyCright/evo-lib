@@ -44,7 +44,7 @@ void draw() {
     tickCounter=0;
     species.clear();
     species.add(world.getBestSpecimen());
-    new World().moveSpeciesToInitialPosition(species, new PVector(-500f, -500f));
+    new World().moveSpeciesToInitialPosition(species, new PVector(0f, 0f));
   }
 
   for (Specimen specimen : species) {

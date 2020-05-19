@@ -1,7 +1,9 @@
 package org.evocraft.lib.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +13,11 @@ import processing.core.PVector;
 @Setter
 public abstract class Cell extends SpecimenComponent {
 
-    final private float STIFFNESS = 0.01f; //todo backlog: should depend of DNA
+    final private float STIFFNESS = 0.005f; //todo backlog: should depend of DNA
 
     protected final float diagonalCellSize = (float) Math.sqrt(2.0) * Membrane.LENGTH;
 
-    private List<Node> adjacentNodes = new ArrayList<>(4);
+    protected List<Node> adjacentNodes = new ArrayList<>(4);
 
     private PVector position = new PVector(0, 0);
 
@@ -53,7 +55,52 @@ public abstract class Cell extends SpecimenComponent {
             PVector force = forceDirection.copy();
             force.mult(forceValue);
             node.applyForce(force);
+            Node oppositeNode = findOppositeNode(node);
+            oppositeNode.applyForce(force.mult(-1));
         }
+    }
+
+    protected Node findOppositeNode(Node node) { //todo refactor: dosen't need calculate every tick. Should be clculated once and stored in the field of Cell
+        Map<Integer, Node> cellNodes = new HashMap<>();
+        for (Node adjacentNode : adjacentNodes) {
+            cellNodes.put(adjacentNode.hashCode(), adjacentNode);
+        }
+
+        int i = node.getTileIndex().i, j = node.getTileIndex().j;
+
+        for (Direction direction : Direction.values()) {
+
+            switch (direction) {
+
+                case UP:
+                    i -= 2;
+                    j -= 2;
+                    break;
+
+                case RIGHT:
+                    i += 2;
+                    j -= 2;
+                    break;
+
+                case DOWN:
+                    i += 2;
+                    j += 2;
+                    break;
+
+                case LEFT:
+                    i -= 2;
+                    j += 2;
+                    break;
+            }
+
+            int key = new TileIndex(i, j).hashCode();
+            Node oppositeNode = cellNodes.get(key);
+            if (oppositeNode != null) {
+                return oppositeNode;
+            }
+        }
+
+        return null;
     }
 
     public abstract Cell copy();

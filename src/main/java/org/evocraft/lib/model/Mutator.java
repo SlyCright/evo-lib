@@ -35,7 +35,7 @@ public class Mutator {
             }
         }
 
-        while (new Random().nextFloat() < ADDITION_CHANCE) {
+        while (new Random().nextFloat() < 0.33f) { //todo refactor: hardcoded
             ConnectionBuilder.insertRandomConnection(connections, cells);
         }
     }

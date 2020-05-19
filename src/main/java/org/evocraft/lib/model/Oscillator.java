@@ -11,7 +11,7 @@ public class Oscillator extends Cell { //todo backlog: add some more types of os
     private int currentTick;
     private float periodStartShift;
 
-    Oscillator(int activationPeriodInTicks, float periodStartShift, boolean doesReverseSignal) {
+   public Oscillator(int activationPeriodInTicks, float periodStartShift, boolean doesReverseSignal) {
         super.doesReverseSignal = doesReverseSignal;
         this.activationPeriodInTicks = activationPeriodInTicks;
         this.periodStartShift=periodStartShift;

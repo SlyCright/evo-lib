@@ -6,9 +6,10 @@ import java.util.Random;
 
 public class CellsBuilder {
 
-    final static private float MUSCLES_PORTION = 1f / 3f;
-    final static private float OSCILLATORS_PORTION = 1f / 3f;
-    final static private float NEURON_PORTION = 1f / 3f;
+    final static private float MUSCLES_PORTION = 1f / 4f;
+    final static private float OSCILLATORS_PORTION = 1f / 4f;
+    final static private float NEURON_PORTION = 1f / 4f;
+    final static private float FIXES_PORTION = 1f / 4f;
 
     public static Map<Integer, Cell> generateCells(int cellsTotal) {
         Map<Integer, Cell> cells = new HashMap<>();
@@ -17,7 +18,6 @@ public class CellsBuilder {
         while (cells.size() < cellsTotal) {
             insertRandomCell(cells);
         }
-        ;
 
         return cells;
     }
@@ -43,26 +43,34 @@ public class CellsBuilder {
         Cell cell = null;
         float randomCellType = new Random().nextFloat();
 
-        if (0f < randomCellType
-                && randomCellType < MUSCLES_PORTION) {
+        if (0f < randomCellType && randomCellType < MUSCLES_PORTION) {
             cell = new Muscle(
                     Membrane.LENGTH * (1.5f - new Random().nextFloat()),
                     new Random().nextBoolean()); //todo refactor: make hardcoded value as constant
+            return cell;
         }
+        randomCellType -= MUSCLES_PORTION;
 
-        if (MUSCLES_PORTION < randomCellType
-                && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION) {
+        if (0f < randomCellType && randomCellType < OSCILLATORS_PORTION) {
             cell = new Oscillator(
                     25 + new Random().nextInt(150),
                     new Random().nextFloat(),
                     new Random().nextBoolean()); //todo refactor: make hardcoded value as constant
+            return cell;
         }
+        randomCellType -= OSCILLATORS_PORTION;
 
-        if (MUSCLES_PORTION + OSCILLATORS_PORTION < randomCellType
-                && randomCellType < MUSCLES_PORTION + OSCILLATORS_PORTION + NEURON_PORTION + 0.1f) {
+        if (0f < randomCellType && randomCellType < NEURON_PORTION) {
             cell = new Neuron(
                     new Random().nextFloat(),
                     new Random().nextBoolean());
+            return cell;
+        }
+        randomCellType -= NEURON_PORTION;
+
+        if (0f < randomCellType && randomCellType < FIXES_PORTION) {
+            cell = new Fixer(new Random().nextBoolean());
+            return cell;
         }
 
         return cell;
