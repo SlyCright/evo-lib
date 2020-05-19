@@ -11,7 +11,7 @@ public class Fixer extends Cell {
     Map<Integer, PVector> savedNodesPositions = new HashMap<>();
 
 
-   public Fixer(boolean doesReverseSignal) {
+    public Fixer(boolean doesReverseSignal) {
         super.doesReverseSignal = doesReverseSignal;
     }
 
@@ -23,11 +23,16 @@ public class Fixer extends Cell {
 
     protected void fixNodes() {
 
-        if(this.isActive){
+        if (this.isActive) {
             for (Node adjacentNode : adjacentNodes) {
-                Environment.applyDragForce(adjacentNode);
-                Environment.applyDragForce(adjacentNode);
-                Environment.applyDragForce(adjacentNode);
+
+                PVector acceleration = adjacentNode.getAcceleration().copy();
+                acceleration.mult(0.25f);
+                adjacentNode.setAcceleration(acceleration);
+
+                PVector velocity = adjacentNode.getVelocity().copy();
+                velocity.mult(0.25f);
+                adjacentNode.setVelocity(velocity);
             }
         }
 //
