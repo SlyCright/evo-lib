@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,19 +58,19 @@ class CrossovererTest {
     void mapParentsComponents_checkCells() {
         List<SpecimenComponent> parentComponents = new ArrayList<>();
 
-        Cell cell1_1 = new Muscle(0f,false);
+        Cell cell1_1 = new Muscle(0f, false);
         cell1_1.setTileIndex(new TileIndex(0, 0));
         parentComponents.add(cell1_1);
 
-        Cell cell1_2 = new Muscle(0f,false);
+        Cell cell1_2 = new Muscle(0f, false);
         cell1_2.setTileIndex(new TileIndex(1, 1));
         parentComponents.add(cell1_2);
 
-        Cell cell2_1 = new Muscle(0f,false);
+        Cell cell2_1 = new Muscle(0f, false);
         cell2_1.setTileIndex(new TileIndex(0, 0));
         parentComponents.add(cell2_1);
 
-        Cell cell2_2 = new Muscle(0f,false);
+        Cell cell2_2 = new Muscle(0f, false);
         cell2_2.setTileIndex(new TileIndex(-1, -1));
         parentComponents.add(cell2_2);
 
@@ -104,22 +105,22 @@ class CrossovererTest {
     void mapParentsComponents_checkConnections() {
         List<SpecimenComponent> parentComponents = new ArrayList<>();
 
-        Connection connection1_1 = new Connection(0f,false);
+        Connection connection1_1 = new Connection(0f, false);
         connection1_1.setInputTileIndex(new TileIndex(0, 0));
         connection1_1.setOutputTileIndex(new TileIndex(1, 1));
         parentComponents.add(connection1_1);
 
-        Connection connection1_2 = new Connection(0f,false);
+        Connection connection1_2 = new Connection(0f, false);
         connection1_2.setInputTileIndex(new TileIndex(1, 1));
         connection1_2.setOutputTileIndex(new TileIndex(2, 1));
         parentComponents.add(connection1_2);
 
-        Connection connection2_1 = new Connection(0f,false);
+        Connection connection2_1 = new Connection(0f, false);
         connection2_1.setInputTileIndex(new TileIndex(0, 0));
         connection2_1.setOutputTileIndex(new TileIndex(1, 1));
         parentComponents.add(connection2_1);
 
-        Connection connection2_2 = new Connection(0f,false);
+        Connection connection2_2 = new Connection(0f, false);
         connection2_2.setInputTileIndex(new TileIndex(1, 1));
         connection2_2.setOutputTileIndex(new TileIndex(1, 2));
         parentComponents.add(connection2_2);
@@ -128,7 +129,7 @@ class CrossovererTest {
 
         assertEquals(3, mappedComponents.size());
 
-        Connection connectionTest = new Connection(0f,false);
+        Connection connectionTest = new Connection(0f, false);
         connectionTest.setInputTileIndex(new TileIndex(0, 0));
         connectionTest.setOutputTileIndex(new TileIndex(1, 1));
         int hash = connectionTest.hashCode();
@@ -138,7 +139,7 @@ class CrossovererTest {
             assertEquals(hash, component.hashCode());
         }
 
-        connectionTest = new Connection(0f,false);
+        connectionTest = new Connection(0f, false);
         connectionTest.setInputTileIndex(new TileIndex(1, 1));
         connectionTest.setOutputTileIndex(new TileIndex(2, 1));
         hash = connectionTest.hashCode();
@@ -148,7 +149,7 @@ class CrossovererTest {
             assertEquals(hash, component.hashCode());
         }
 
-        connectionTest = new Connection(0f,false);
+        connectionTest = new Connection(0f, false);
         connectionTest.setInputTileIndex(new TileIndex(1, 1));
         connectionTest.setOutputTileIndex(new TileIndex(1, 2));
         hash = connectionTest.hashCode();
@@ -163,22 +164,22 @@ class CrossovererTest {
     void listOffspringComponents() {
         List<SpecimenComponent> parentComponents = new ArrayList<>();
 
-        Connection connection1_1 = new Connection(0f,false);
+        Connection connection1_1 = new Connection(0f, false);
         connection1_1.setInputTileIndex(new TileIndex(0, 0));
         connection1_1.setOutputTileIndex(new TileIndex(1, 1));
         parentComponents.add(connection1_1);
 
-        Connection connection1_2 = new Connection(0.25f,false);
+        Connection connection1_2 = new Connection(0.25f, false);
         connection1_2.setInputTileIndex(new TileIndex(1, 1));
         connection1_2.setOutputTileIndex(new TileIndex(2, 1));
         parentComponents.add(connection1_2);
 
-        Connection connection2_1 = new Connection(1f,false);
+        Connection connection2_1 = new Connection(1f, false);
         connection2_1.setInputTileIndex(new TileIndex(0, 0));
         connection2_1.setOutputTileIndex(new TileIndex(1, 1));
         parentComponents.add(connection2_1);
 
-        Connection connection2_2 = new Connection(0.75f,false);
+        Connection connection2_2 = new Connection(0.75f, false);
         connection2_2.setInputTileIndex(new TileIndex(1, 1));
         connection2_2.setOutputTileIndex(new TileIndex(1, 2));
         parentComponents.add(connection2_2);
@@ -201,20 +202,20 @@ class CrossovererTest {
     void mapConnectionsFromComponentList() {
         List<SpecimenComponent> listedComponents = new ArrayList<>();
 
-        Cell cell1_1 = new Muscle(0f,false);
+        Cell cell1_1 = new Muscle(0f, false);
         cell1_1.setTileIndex(new TileIndex(0, 0));
         listedComponents.add(cell1_1);
 
-        Cell cell1_2 = new Muscle(0f,false);
+        Cell cell1_2 = new Muscle(0f, false);
         cell1_2.setTileIndex(new TileIndex(1, 1));
         listedComponents.add(cell1_2);
 
-        Connection connection1_1 = new Connection(0f,false);
+        Connection connection1_1 = new Connection(0f, false);
         connection1_1.setInputTileIndex(new TileIndex(0, 0));
         connection1_1.setOutputTileIndex(new TileIndex(1, 1));
         listedComponents.add(connection1_1);
 
-        Connection connection1_2 = new Connection(0.25f,false);
+        Connection connection1_2 = new Connection(0.25f, false);
         connection1_2.setInputTileIndex(new TileIndex(1, 1));
         connection1_2.setOutputTileIndex(new TileIndex(2, 1));
         listedComponents.add(connection1_2);
@@ -223,5 +224,18 @@ class CrossovererTest {
 
         assertNotNull(mappedConnections);
         assertEquals(2, mappedConnections.size());
+    }
+
+    @Test
+    void saveElite() {
+        List<Specimen> species = SpecimenBuilder.generateSpecies(100);
+
+        List<Specimen> elite = Crossoverer.saveElite(species, 10);
+
+        assertEquals(10, elite.size());
+
+        for (int i = 0; i < 10; i++) {
+            assertTrue(elite.get(i).isCopiedVersionOf(species.get(i)));
+        }
     }
 }

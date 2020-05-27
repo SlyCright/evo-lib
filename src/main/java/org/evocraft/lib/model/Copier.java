@@ -2,6 +2,10 @@ package org.evocraft.lib.model;
 
 public class Copier {
 
+    public static Specimen copy(Specimen specimen) {
+        return null;
+    }
+
     public static Muscle copy(Muscle muscle) {
         Muscle muscleCopy = new Muscle(
                 muscle.getSizeWhenActivated(),
@@ -41,4 +45,5 @@ public class Copier {
         connectionCopy.setOutputTileIndex(connection.getOutputTileIndex());
         return connectionCopy;
     }
+
 }

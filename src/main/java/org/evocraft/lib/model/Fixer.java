@@ -2,14 +2,11 @@ package org.evocraft.lib.model;
 
 import processing.core.PVector;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Fixer extends Cell {
-    boolean isStillFixing = false;
-    Map<Integer, PVector> savedNodesPositions = new HashMap<>();
 
+    private static final float FREEZE_RATIO=0.25f;
 
     public Fixer(boolean doesReverseSignal) {
         super.doesReverseSignal = doesReverseSignal;
@@ -27,45 +24,14 @@ public class Fixer extends Cell {
             for (Node adjacentNode : adjacentNodes) {
 
                 PVector acceleration = adjacentNode.getAcceleration().copy();
-                acceleration.mult(0.25f);
+                acceleration.mult(FREEZE_RATIO);
                 adjacentNode.setAcceleration(acceleration);
 
                 PVector velocity = adjacentNode.getVelocity().copy();
-                velocity.mult(0.25f);
+                velocity.mult(FREEZE_RATIO);
                 adjacentNode.setVelocity(velocity);
             }
         }
-//
-//        if (!this.isActive && !this.isStillFixing) {
-//            return;
-//        }
-//
-//        if (this.isActive && !this.isStillFixing) {
-//            isStillFixing = true;
-//
-//            for (Node adjacentNode : adjacentNodes) {
-//                int key = adjacentNode.hashCode();
-//                PVector positionToSave = adjacentNode.getPosition().copy();
-//                savedNodesPositions.put(key, positionToSave);
-//            }
-//        }
-//
-//        if (!this.isActive && this.isStillFixing) {
-//            isStillFixing = false;
-//            savedNodesPositions.clear();
-//        }
-//
-//        if (this.isActive && this.isStillFixing) {
-//
-//            for (Node adjacentNode : adjacentNodes) {
-//                adjacentNode.setAcceleration(new PVector(0f, 0f));
-//                adjacentNode.setVelocity(new PVector(0f, 0f));
-//                int key = adjacentNode.hashCode();
-//                PVector savedPosition = savedNodesPositions.get(key).copy();
-//                adjacentNode.setPosition(savedPosition);
-//            }
-//        }
-
     }
 
     protected boolean calculateIfActive(List<Connection> inputConnections) { //todo refactor: the same method as an Muscle

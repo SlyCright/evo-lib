@@ -11,8 +11,14 @@ public class Crossoverer {
     private static final float SPECIMENS_PORTION_WHICH_BECOMES_ANCESTOR = 1f / 3f;
     public static final int SEXES_TOTAL = 2;
 
+    private static final boolean IF_ELITISM_IS_ON = true;
+    private static final float ELITE_PORTION = 0.1f;
+
     public static ArrayList<Specimen> crossOverBestFittedOf(ArrayList<Specimen> ancestors) {
         int offspringsTotal = ancestors.size();
+        int eliteTotal = Math.round((float) offspringsTotal * ELITE_PORTION);
+
+        ArrayList<Specimen> elite = saveElite(ancestors, eliteTotal);
 
         killWorst(ancestors);
 
@@ -30,6 +36,15 @@ public class Crossoverer {
         }
 
         return offsprings;
+    }
+
+    protected static ArrayList<Specimen> saveElite(List<Specimen> ancestors, int eliteTotal) {
+        List<Specimen> elite=new ArrayList<>();
+
+        for (int i = 0; i < eliteTotal; i++) {
+            Specimen specimen = ancestors.get(i).copy();
+        }
+        return elite;
     }
 
     protected static void killWorst(ArrayList<Specimen> specimens) {
